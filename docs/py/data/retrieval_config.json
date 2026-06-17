@@ -1,0 +1,106 @@
+{
+  "backend": "hybrid",
+  "qdrant": {
+    "enabled": true,
+    "mode": "local",
+    "url": "",
+    "api_key": "",
+    "path": "data/qdrant_store_template",
+    "collection": "enterprise_rag_default",
+    "vector_size": 1024,
+    "distance": "Cosine"
+  },
+  "embedding": {
+    "provider": "local_hash",
+    "model": "local_hash_v1",
+    "base_url": "",
+    "api_key": ""
+  },
+  "rerank": {
+    "enabled": true,
+    "provider": "local_overlap",
+    "model": "local_overlap_v1",
+    "base_url": "",
+    "api_key": "",
+    "candidate_limit": 12,
+    "top_n": 5
+  },
+  "sparse": {
+    "enabled": true,
+    "provider": "bm25",
+    "k1": 1.5,
+    "b": 0.75,
+    "dense_weight": 0.6,
+    "sparse_weight": 0.4,
+    "fusion_alpha": 0.7,
+    "rrf_k": 50,
+    "query_profiles": {
+      "keyword_exact": {
+        "dense_weight": 0.35,
+        "sparse_weight": 0.65,
+        "fusion_alpha": 0.55
+      },
+      "identifier_lookup": {
+        "dense_weight": 0.25,
+        "sparse_weight": 0.75,
+        "fusion_alpha": 0.45
+      },
+      "faq_semantic": {
+        "dense_weight": 0.72,
+        "sparse_weight": 0.28,
+        "fusion_alpha": 0.82
+      },
+      "process_policy": {
+        "dense_weight": 0.58,
+        "sparse_weight": 0.42,
+        "fusion_alpha": 0.7
+      }
+    }
+  },
+  "orchestration": {
+    "rewrite": {
+      "enabled": true,
+      "expand_synonyms": true,
+      "attempt_expansions": true
+    },
+    "judge": {
+      "min_results": 2,
+      "min_top_score": 0.24,
+      "min_avg_score": 0.16
+    },
+    "routing": {
+      "enabled": true,
+      "profile_backends": {
+        "identifier_lookup": "bm25",
+        "keyword_exact": "hybrid",
+        "faq_semantic": "qdrant",
+        "process_policy": "hybrid"
+      }
+    },
+    "retry": {
+      "enabled": true,
+      "max_attempts": 2,
+      "fallback_top_k": 8,
+      "stages": [
+        {
+          "backend": "hybrid",
+          "top_k": 8,
+          "rewrite_mode": "broad"
+        },
+        {
+          "backend": "bm25",
+          "top_k": 10,
+          "rewrite_mode": "strict"
+        }
+      ]
+    }
+  },
+  "milvus": {
+    "enabled": false,
+    "uri": "http://127.0.0.1:19530",
+    "token": "",
+    "user": "",
+    "password": "",
+    "db_name": "default"
+  }
+}

@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>平台总后台 V2 · 企业级 RAG SaaS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            surface: "#f8fafc",
+            panel: "#ffffff",
+            panelSoft: "#f8fafc",
+            line: "#e2e8f0",
+            textMain: "#0f172a",
+            textMuted: "#64748b",
+            primary: "#10b981",
+            primaryDeep: "#059669",
+            danger: "#ef4444",
+            success: "#10b981",
+            warning: "#f59e0b",
+            slateInk: "#0f172a"
+          },
+          fontFamily: {
+            headline: ["Manrope", "sans-serif"],
+            body: ["Inter", "sans-serif"]
+          },
+          boxShadow: {
+            panel: "0 4px 12px rgba(0, 0, 0, 0.05)"
+          }
+        }
+      }
+    };
+  </script>
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const main = document.getElementById('main-content');
+      sidebar.classList.toggle('-translate-x-full');
+      main.classList.toggle('lg:ml-64');
+      main.classList.toggle('ml-0');
+    }
+  </script>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-strong: #ffffff;
+      --line: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #10b981;
+      --primary-deep: #059669;
+      --primary-soft: #ecfdf5;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+
+    h1,
+    h2,
+    h3,
+    .brand-font {
+      font-family: "Manrope", sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+      vertical-align: middle;
+    }
+
+    .glass {
+      background: #ffffff;
+    }
+
+    .menu-btn.active {
+      background: #ecfdf5;
+      color: #059669;
+      box-shadow: inset 0 0 0 1px #d1fae5;
+    }
+
+    .menu-btn {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      gap: 12px !important;
+      padding: 12px 16px !important;
+      transition: all 0.2s ease;
+    }
+
+    .metric-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .table-shell {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    button,
+    .btn-primary,
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 22px !important;
+      border-radius: 12px !important;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 800 !important;
+      font-size: 14px !important;
+      transition: all 0.2s ease !important;
+      border: none;
+      line-height: 1.25 !important;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--primary, #10b981) !important;
+      color: #fff !important;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+    }
+
+    .btn-primary:hover {
+      background: var(--primaryDeep, #059669) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.2);
+    }
+
+    .btn-secondary {
+      background: #ffffff !important;
+      color: var(--textMain, #0f172a) !important;
+      border: 1px solid var(--line, #e2e8f0) !important;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100% !important;
+      padding: 12px 18px !important;
+      border-radius: 14px !important;
+      border: 1px solid #e2e8f0 !important;
+      background: #ffffff !important;
+      color: #0f172a !important;
+      font: inherit !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      outline: none !important;
+      transition: all 0.25s ease !important;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      background: #ffffff !important;
+      border-color: #10b981 !important;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1) !important;
+    }
+
+    /* Toast Styling */
+    #toast-container {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .toast {
+      min-width: 300px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      background: #ffffff;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: toast-in 0.3s ease-out forwards;
+      color: #1e293b;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .toast.error {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+
+    .toast.info {
+      border-color: #3b82f6;
+      background: #eff6ff;
+    }
+
+    @keyframes toast-in {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* 平台总日志页面优化 */
+    .admin-pane[data-section="logs"] {
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Config Block Styling */
+    .config-block {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+
+    .config-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #f1f5f9;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .config-step {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-deep));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+    }
+
+    .config-title-area {
+      flex: 1;
+    }
+
+    .config-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0;
+    }
+
+    .config-desc {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+      line-height: 1.5;
+    }
+
+    .config-content {
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 折叠动画效果 */
+    .config-block {
+      transition: all 0.3s ease;
+    }
+
+    .metric-card {
+      background: white;
+      border: 1px solid var(--line);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-deep));
+    }
+
+    .metric-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .table-shell {
+      background: white;
+      border: 1px solid var(--line);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .table-shell:hover {
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .table-shell h2 {
+      background: linear-gradient(135deg, #0f172a, #334155);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* 日志项样式优化 */
+    .log-item {
+      padding: 20px;
+      border-bottom: 1px solid var(--line);
+      transition: all 0.2s ease;
+    }
+
+    .log-item:hover {
+      background: #f8fafc;
+      padding-left: 24px;
+    }
+
+    .log-item:last-child {
+      border-bottom: none;
+    }
+
+    /* 状态标签优化 */
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-badge.success {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    .status-badge.warning {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--warning);
+    }
+
+    .status-badge.error {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+    }
+
+    /* Custom Dropdown Styling - Unified Style */
+    .custom-dropdown {
+      position: relative;
+      width: 100%;
+    }
+
+    .dropdown-trigger {
+      width: 100%;
+      height: 52px;
+      padding: 0 20px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #111827;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      user-select: none;
+    }
+
+    .dropdown-trigger:hover {
+      border-color: #d1d5db;
+      background: #fafafa;
+    }
+
+    .dropdown-trigger.active {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      z-index: 1001;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-4px);
+      transition: all 0.2s ease;
+      overflow: hidden;
+      padding: 8px;
+    }
+
+    .dropdown-menu.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-item {
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #374151;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+
+    .dropdown-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .dropdown-item:hover {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .dropdown-item.selected {
+      background: #ecfdf5;
+      color: #059669;
+    }
+
+    /* Custom Modal Styling */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      padding: 20px;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: #ffffff;
+      width: 100%;
+      max-width: 440px;
+      border-radius: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      padding: 32px;
+      transform: scale(0.95);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-backdrop.active .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .modal-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .modal-icon.danger {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0;
+    }
+
+    .modal-body {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #64748b;
+      margin-bottom: 28px;
+      padding-left: 64px;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      padding-left: 64px;
+    }
+
+    .modal-btn {
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .modal-btn-cancel {
+      background: #f1f5f9;
+      color: #64748b;
+    }
+
+    .modal-btn-cancel:hover {
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+    .modal-btn-ok {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+    }
+
+    .modal-btn-ok:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+    }
+
+    .modal-btn-ok.danger {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+
+    .modal-btn-ok.danger:hover {
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+    }
+
+    /* Login page input focus styles */
+    #login-screen input:focus {
+      outline: none;
+      border-color: var(--primary) !important;
+      background: #ffffff !important;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1), 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    #login-screen button:hover {
+      background: var(--primary-deep);
+    }
+
+    #login-screen button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .remember-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .remember-option {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .remember-option input {
+      width: 16px !important;
+      height: 16px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border-radius: 4px !important;
+      border: none !important;
+      box-shadow: none !important;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Responsive adjustments for login page */
+    @media (max-width: 1080px) {
+      #login-screen > div {
+        grid-template-columns: 1fr;
+      }
+      #login-screen section:first-child {
+        padding: 36px 28px;
+      }
+      #login-screen section:first-child h1 {
+        font-size: 36px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      #login-screen section:first-child > div > div:last-child {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen">
+  <div id="toast-container"></div>
+
+  <!-- Custom Modal -->
+  <div id="admin-modal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div id="admin-modal-icon" class="modal-icon">
+          <span class="material-symbols-outlined" style="font-size: 24px;">help</span>
+        </div>
+        <h3 id="admin-modal-title" class="modal-title">确认操作</h3>
+      </div>
+      <p id="admin-modal-body" class="modal-body"></p>
+      <div class="modal-footer">
+        <button id="admin-modal-cancel-btn" class="modal-btn modal-btn-cancel">取消</button>
+        <button id="admin-modal-ok-btn" class="modal-btn modal-btn-ok">确定</button>
+      </div>
+    </div>
+  </div>
+  <div id="login-screen" class="min-h-screen" style="background: #f5fcf8; background-image: radial-gradient(circle at top left, rgba(16, 185, 129, 0.08), transparent 30%), radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.06), transparent 30%);">
+    <div class="min-h-screen grid lg:grid-cols-[1.1fr_0.9fr] gap-6 p-6">
+      <!-- Hero Section -->
+      <section class="relative overflow-hidden rounded-3xl border border-line shadow-lg p-12 text-white" style="background: linear-gradient(135deg, #10b981, #059669);">
+        <!-- Decorative circles -->
+        <div style="content: ''; position: absolute; width: 360px; height: 360px; border-radius: 999px; background: rgba(255, 255, 255, 0.08); top: -120px; right: -80px;"></div>
+        <div style="content: ''; position: absolute; width: 280px; height: 280px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); bottom: -120px; left: -60px;"></div>
+        
+        <div style="position: relative; z-index: 1;">
+          <div style="display: inline-flex; padding: 9px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.08); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;">
+            Platform Console
+          </div>
+          <h1 style="font-size: 46px; line-height: 1.12; margin: 22px 0 16px; letter-spacing: -0.04em; font-family: 'Manrope', sans-serif;">
+            RAG SaaS<br>平台总后台
+          </h1>
+          <p style="max-width: 560px; font-size: 17px; line-height: 1.85; color: rgba(255,255,255,0.86);">
+            统筹管理所有企业租户、监控平台运行状态、审计全局日志与资源调度，提供一站式 SaaS 平台运营中心。
+          </p>
+          
+          <!-- Feature Grid -->
+          <div style="margin-top: 36px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;">
+            <div style="padding: 18px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.08);">
+              <h3 style="margin: 0 0 8px; font-size: 16px; font-weight: 800;">租户管理</h3>
+              <p style="margin: 0; font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.74);">创建、停用、维护企业租户账号，发放租户控制台入口。</p>
+            </div>
+            <div style="padding: 18px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.08);">
+              <h3 style="margin: 0 0 8px; font-size: 16px; font-weight: 800;">全局监控</h3>
+              <p style="margin: 0; font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.74);">实时查看平台请求量、缓存命中率、向量库状态与系统健康度。</p>
+            </div>
+            <div style="padding: 18px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.08);">
+              <h3 style="margin: 0 0 8px; font-size: 16px; font-weight: 800;">审计日志</h3>
+              <p style="margin: 0; font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.74);">平台级请求日志、护栏事件、聊天记录与知识命中审计追踪。</p>
+            </div>
+            <div style="padding: 18px; border-radius: 22px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.08);">
+              <h3 style="margin: 0 0 8px; font-size: 16px; font-weight: 800;">任务调度</h3>
+              <p style="margin: 0; font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.74);">监控采集任务状态、执行历史与检索评测实验结果。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Login Form Section -->
+      <section class="flex items-center justify-center rounded-3xl border border-line shadow-lg p-8 bg-white">
+        <div style="width: 100%; max-width: 440px;">
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 26px;">
+            <div style="width: 72px; height: 52px; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 16px rgba(16, 185, 129, 0.2); font-weight: 800; letter-spacing: 0.08em;">
+              <span class="material-symbols-outlined" style="font-size: 28px;">admin_panel_settings</span>
+            </div>
+            <div>
+              <h2 style="margin: 0; font-size: 28px; letter-spacing: -0.03em; font-family: 'Manrope', sans-serif; font-weight: 800;">平台管理</h2>
+              <div style="color: var(--muted); margin-top: 6px; font-size: 14px;">使用管理员账号登录平台控制台</div>
+            </div>
+          </div>
+
+          <label style="display: block; margin-top: 16px;">
+            <span style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 700;">管理员账号</span>
+            <input id="login-user" type="text" placeholder="请输入管理员账号" maxlength="32" autocomplete="off"
+              style="width: 100%; border: 1px solid #cbd5e1; border-radius: 12px; padding: 14px 18px; font: inherit; color: #0f172a; background: #ffffff; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
+          </label>
+          
+          <label style="display: block; margin-top: 16px;">
+            <span style="display: block; margin-bottom: 8px; font-size: 13px; font-weight: 700;">管理员密码</span>
+            <input id="login-pass" type="password" placeholder="请输入管理员密码" maxlength="32" autocomplete="off" spellcheck="false"
+              style="width: 100%; border: 1px solid #cbd5e1; border-radius: 12px; padding: 14px 18px; font: inherit; color: #0f172a; background: #ffffff; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);"
+              onkeydown="if(event.key==='Enter') doLogin()">
+          </label>
+          
+          <div class="remember-row">
+            <label class="remember-option">
+              <input id="login-remember-user" type="checkbox">
+              <span>记住账号</span>
+            </label>
+            <label class="remember-option">
+              <input id="login-remember-session" type="checkbox">
+              <span>30天免输密码</span>
+            </label>
+          </div>
+
+          <button id="login-btn" type="button" onclick="doLogin()"
+            style="width: 100%; margin-top: 20px; border: none; border-radius: 12px; padding: 15px 16px; font: inherit; font-weight: 700; color: white; background: var(--primary); cursor: pointer; transition: all 0.15s ease;">
+            登录平台后台
+          </button>
+          
+          <div id="login-msg" style="color: var(--danger); font-size: 14px; margin-top: 14px; min-height: 20px;"></div>
+          
+          <div style="margin-top: 16px; font-size: 12px; text-align: center; color: var(--muted);">
+            登录后将进入平台总控制台，管理所有企业租户。
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div id="dashboard" class="hidden relative flex min-h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar"
+      class="fixed left-0 top-0 z-40 h-screen w-64 bg-white border-r border-line flex flex-col transition-transform duration-300">
+      <div class="px-6 py-8 flex items-center gap-3">
+        <div
+          class="h-10 w-10 rounded-xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/20 flex-shrink-0">
+          <span class="material-symbols-outlined text-[20px]">grid_view</span>
+        </div>
+        <div>
+          <h2 class="brand-font text-[16px] font-black leading-tight tracking-tight">RAG SaaS</h2>
+          <p class="text-[10px] uppercase tracking-wider text-textMuted font-bold mt-0.5">PLATFORM CONSOLE</p>
+        </div>
+      </div>
+
+      <nav class="flex-1 px-4 space-y-1.5 overflow-y-auto">
+        <button type="button"
+          class="menu-btn active w-full rounded-xl px-4 py-3 text-left text-sm font-bold flex items-center transition"
+          data-section-btn="tenants" onclick="switchAdminSection('tenants')">
+          <span class="material-symbols-outlined mr-3 text-[20px]">corporate_fare</span>
+          企业账户管理
+        </button>
+        <button type="button"
+          class="menu-btn w-full rounded-xl px-4 py-3 text-left text-sm font-bold flex items-center transition"
+          data-section-btn="analytics" onclick="switchAdminSection('analytics')">
+          <span class="material-symbols-outlined mr-3 text-[20px]">dashboard</span>
+          平台统计报表
+        </button>
+        <button type="button"
+          class="menu-btn w-full rounded-xl px-4 py-3 text-left text-sm font-bold flex items-center transition"
+          data-section-btn="logs" onclick="switchAdminSection('logs')">
+          <span class="material-symbols-outlined mr-3 text-[20px]">analytics</span>
+          平台总日志
+        </button>
+      </nav>
+
+      <div class="p-6 border-t border-line bg-gray-50/50">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+            <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span>
+          </div>
+          <div>
+            <div class="text-[10px] uppercase tracking-wider text-textMuted font-bold">当前角色</div>
+            <div class="text-xs font-black">超级管理员</div>
+          </div>
+        </div>
+        <button type="button" onclick="doAdminLogout()"
+          class="w-full h-11 flex items-center justify-center gap-2 rounded-xl bg-white border border-line text-xs font-bold text-danger hover:shadow-md hover:border-danger/30 transition-all duration-200">
+          <span class="material-symbols-outlined text-[18px]">logout</span>
+          退出登录
+        </button>
+        <div class="mt-4 flex items-center justify-between px-1 text-[11px] font-bold text-primary">
+          <a href="/login" class="hover:underline">前台登录</a>
+          <span class="w-1 h-1 rounded-full bg-primary/30"></span>
+          <a href="/tenant" class="hover:underline">去租户端</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main-content" class="flex-1 lg:ml-64 ml-0 flex flex-col min-h-screen bg-[#f8fafc]">
+      <!-- Header -->
+      <header
+        class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-line" style="padding: 24px 80px !important;">
+        <div class="flex items-center justify-between w-full">
+          <div class="flex items-center gap-5">
+            <button type="button" onclick="toggleSidebar()"
+              class="lg:hidden p-2 rounded-xl bg-gray-100/50 hover:bg-gray-100 text-textMuted transition">
+              <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div>
+              <h1 id="page-title" class="text-xl font-black text-textMain tracking-tight">企业账户管理</h1>
+              <p id="page-subtitle" class="text-[13px] text-textMuted font-medium mt-0.5">创建、停用、维护企业租户账号，并发放租户控制台入口。</p>
+            </div>
+          </div>
+          <div class="hidden sm:block">
+            <div
+              class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100/50 border border-line font-mono text-[10px] font-bold text-textMuted">
+              <span class="w-2 h-2 rounded-full bg-green-500"></span>
+              <span id="admin-port-badge">PORT: --</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Scrollable Content Area -->
+      <div class="px-6 py-8 space-y-8 w-full" style="padding-left: 80px !important; padding-right: 80px !important; max-width: 1280px; margin: 0 auto;">
+
+        <!-- Dynamic Content (Section Panes) -->
+        <section class="admin-pane active space-y-8" data-section="tenants">
+          <!-- Stats Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="bg-white border border-line rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-[11px] uppercase tracking-widest text-textMuted font-black">企业总数</span>
+                <div class="h-8 w-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-[18px]">diversity_3</span>
+                </div>
+              </div>
+              <div id="tenant-count-card" class="text-4xl font-black text-textMain tracking-tighter">0</div>
+            </div>
+            <div class="bg-white border border-line rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-[11px] uppercase tracking-widest text-textMuted font-black">启用租户</span>
+                <div class="h-8 w-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                </div>
+              </div>
+              <div id="tenant-enabled-card" class="text-4xl font-black text-textMain tracking-tighter">0</div>
+            </div>
+            <div class="bg-white border border-line rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-[11px] uppercase tracking-widest text-textMuted font-black">最近操作</span>
+                <div class="h-8 w-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-[18px]">update</span>
+                </div>
+              </div>
+              <div id="tenant-latest-card" class="text-sm font-bold text-textMain truncate leading-tight mt-2">暂无记录
+              </div>
+            </div>
+          </div>
+
+          <!-- Add/Edit Form Card -->
+          <section class="bg-white border border-line rounded-3xl p-6 sm:p-8 shadow-sm">
+            <h3 class="text-lg font-black text-textMain mb-6 flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">add_business</span>
+              <span id="tenant-form-mode">添加/编辑企业租户</span>
+            </h3>
+            <p class="text-sm text-textMuted mb-6">创建后将在此租户隔离数据和知识配置。</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div class="field-group">
+                <label class="field-label text-[11px] font-black uppercase tracking-widest text-textMuted">企业 ID</label>
+                <input id="tenant-id" type="text" placeholder="如 acme" class="w-full">
+              </div>
+              <div class="field-group">
+                <label class="field-label text-[11px] font-black uppercase tracking-widest text-textMuted">企业名称</label>
+                <input id="tenant-name" type="text" placeholder="如 Acme 集团知识库" class="w-full">
+              </div>
+              <div class="field-group">
+                <label class="field-label text-[11px] font-black uppercase tracking-widest text-textMuted">管理员账号</label>
+                <input id="tenant-admin" type="text" placeholder="ten_admin" class="w-full">
+              </div>
+              <div class="field-group">
+                <label class="field-label text-[11px] font-black uppercase tracking-widest text-textMuted">初始密码 / 重置</label>
+                <input id="tenant-password" type="password" placeholder="留空则不修改" class="w-full">
+              </div>
+            </div>
+
+            <div class="btn-row" style="margin-top:24px; display:flex; gap:10px; justify-content:flex-start; flex-wrap:wrap;">
+              <button class="btn-primary" onclick="saveTenant()">
+                <span class="material-symbols-outlined text-[18px]">save</span>
+                保存企业租户
+              </button>
+              <button class="btn-secondary" onclick="clearTenantForm()">
+                <span class="material-symbols-outlined text-[18px]">delete_sweep</span>
+                清空
+              </button>
+            </div>
+          </section>
+
+          <!-- List Card -->
+          <section class="bg-white border border-line rounded-3xl p-6 sm:p-8 shadow-sm">
+            <h3 class="text-lg font-black text-textMain mb-6 flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">domain</span>
+              企业租户列表
+            </h3>
+            <div id="tenant-list" style="display:grid; gap:16px;">
+              <!-- Data rows -->
+            </div>
+          </section>
+        </section>
+
+        <!-- Analytics Pane -->
+        <section class="admin-pane hidden" data-section="analytics" style="padding:0;overflow:hidden;">
+          <iframe id="platform-analytics-frame" src="/platform_analytics_v2.html" style="width:100%;height:calc(100vh - 120px);border:none;"></iframe>
+        </section>
+
+        <!-- Logs Pane -->
+        <section class="admin-pane hidden space-y-6" data-section="logs">
+          <!-- 1. 平台概览 -->
+          <div class="config-block">
+            <div class="config-header" onclick="toggleSection('section1')">
+              <div class="config-step">1</div>
+              <div class="config-title-area">
+                <h3 class="config-title">平台概览</h3>
+                <p class="config-desc">查看平台运行状态、请求量和系统健康度。</p>
+              </div>
+            </div>
+            <div id="section1" class="config-content" style="display: none; margin-top: 20px; padding: 20px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+              <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl border border-line">
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs uppercase tracking-[0.18em] text-textMuted font-bold">24h 请求数</span>
+                    <span class="material-symbols-outlined text-primary">speed</span>
+                  </div>
+                  <div id="metric-request-count" class="text-3xl font-bold">-</div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-line">
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs uppercase tracking-[0.18em] text-textMuted font-bold">平均耗时</span>
+                    <span class="material-symbols-outlined text-warning">timer</span>
+                  </div>
+                  <div id="metric-latency" class="text-3xl font-bold">-</div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-line">
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs uppercase tracking-[0.18em] text-textMuted font-bold">缓存后端</span>
+                    <span class="material-symbols-outlined text-primary">bolt</span>
+                  </div>
+                  <div id="metric-cache-backend" class="text-3xl font-bold">-</div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-line">
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs uppercase tracking-[0.18em] text-textMuted font-bold">向量库状态</span>
+                    <span class="material-symbols-outlined text-success">cloud_done</span>
+                  </div>
+                  <div id="metric-vector-store" class="text-3xl font-bold">-</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. 系统日志 -->
+          <div class="config-block">
+            <div class="config-header" onclick="toggleSection('section2')">
+              <div class="config-step">2</div>
+              <div class="config-title-area">
+                <h3 class="config-title">系统日志</h3>
+                <p class="config-desc">查看 API 请求和护栏事件的详细记录。</p>
+              </div>
+            </div>
+            <div id="section2" class="config-content" style="display: none; margin-top: 20px; padding: 20px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+              <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <div class="bg-white p-5 rounded-xl border border-line">
+                  <div class="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 class="font-semibold text-textMain">请求日志</h4>
+                      <p class="text-xs text-textMuted">平台级 API 请求、耗时、状态与缓存命中情况。</p>
+                    </div>
+                    <button type="button" onclick="loadObservabilityPanel()"
+                      class="text-sm px-4 py-2 bg-white border border-line rounded-full font-semibold hover:bg-panelSoft transition">
+                      刷新
+                    </button>
+                  </div>
+                  <div id="request-log-list" class="divide-y divide-line/70"></div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-line">
+                  <div class="flex items-center justify-between mb-3">
+                    <div>
+                      <h4 class="font-semibold text-textMain">护栏事件</h4>
+                      <p class="text-xs text-textMuted">输入拦截、输出脱敏和其他合规事件。</p>
+                    </div>
+                  </div>
+                  <div id="guardrail-event-list" class="divide-y divide-line/70"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. 业务日志 -->
+          <div class="config-block">
+            <div class="config-header" onclick="toggleSection('section3')">
+              <div class="config-step">3</div>
+              <div class="config-title-area">
+                <h3 class="config-title">业务日志</h3>
+                <p class="config-desc">查看平台级聊天记录和知识命中情况。</p>
+              </div>
+            </div>
+            <div id="section3" class="config-content" style="display: none; margin-top: 20px; padding: 20px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+              <div class="bg-white p-5 rounded-xl border border-line">
+                <div class="flex flex-wrap items-center justify-between mb-3 gap-3">
+                  <div>
+                    <h4 class="font-semibold text-textMain">平台问答日志</h4>
+                    <p class="text-xs text-textMuted">查看平台级聊天日志和命中知识摘要。</p>
+                  </div>
+                  <div class="flex gap-3">
+                    <input id="chat-log-phone" type="text" placeholder="按手机号筛选（可留空）"
+                      class="text-sm px-4 py-2.5 rounded-lg border border-line bg-panelSoft focus:border-primary focus:ring-primary/20">
+                    <button type="button" onclick="loadChatLogs(1)"
+                      class="text-sm px-4 py-2.5 bg-primary text-white rounded-lg font-semibold hover:bg-primaryDeep transition">
+                      查询
+                    </button>
+                  </div>
+                </div>
+                <div id="chat-log-list" class="divide-y divide-line/70"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. 任务与评测 -->
+          <div class="config-block">
+            <div class="config-header" onclick="toggleSection('section4')">
+              <div class="config-step">4</div>
+              <div class="config-title-area">
+                <h3 class="config-title">任务与评测</h3>
+                <p class="config-desc">查看调度任务状态和检索评测结果。</p>
+              </div>
+            </div>
+            <div id="section4" class="config-content" style="display: none; margin-top: 20px; padding: 20px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+              <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-4">
+                <div class="bg-white p-5 rounded-xl border border-line">
+                  <div class="mb-3">
+                    <h4 class="font-semibold text-textMain">调度任务监控</h4>
+                    <p class="text-xs text-textMuted">查看平台采集任务总数、待执行任务和近 24 小时成功失败情况。</p>
+                  </div>
+                  <div id="scheduler-panel" class="divide-y divide-line/70"></div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border border-line">
+                  <div class="mb-3">
+                    <h4 class="font-semibold text-textMain">RAG 评测</h4>
+                    <p class="text-xs text-textMuted">既看召回 hit@k，也复用真实问答链路评估 Faithfulness / Relevancy。</p>
+                  </div>
+                  <div class="space-y-3">
+                    <label class="block">
+                      <span class="block text-sm font-semibold mb-2">评测名称</span>
+                      <input id="evaluation-name" type="text" value="平台检索评测"
+                        class="w-full text-sm px-4 py-2.5 rounded-lg border border-line bg-panelSoft focus:border-primary focus:ring-primary/20">
+                    </label>
+                    <label class="block">
+                      <span class="block text-sm font-semibold mb-2">评测题集 JSON</span>
+                      <textarea id="evaluation-cases"
+                        class="w-full text-sm px-4 py-2.5 rounded-lg border border-line bg-panelSoft focus:border-primary focus:ring-primary/20 min-h-[140px]">[
+  {"question":"报销流程怎么走","expected_keywords":["报销","审批"],"expected_tier":"医保","reference_answer":"先提交报销单并走审批流程。"},
+  {"question":"今天有没有临时通知","expected_keywords":["公告","通知"],"expected_tier":"挂号","reference_answer":"如知识库没有临时通知，应明确说明未命中相关内容。"}
+]</textarea>
+                    </label>
+                    <div class="flex gap-3">
+                      <button type="button" onclick="runEvaluation()"
+                        class="text-sm px-4 py-2.5 bg-primary text-white rounded-lg font-semibold hover:bg-primaryDeep transition">
+                        一键跑评测
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="bg-white p-5 rounded-xl border border-line">
+                <div class="mb-3">
+                  <h4 class="font-semibold text-textMain">评测历史</h4>
+                  <p class="text-xs text-textMuted">对比不同时点、不同配置下的召回效果和答案质量表现。</p>
+                </div>
+                <div id="evaluation-log-list" class="divide-y divide-line/70"></div>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            function toggleSection(sectionId) {
+              const section = document.getElementById(sectionId);
+              if (section.style.display === 'none') {
+                section.style.display = 'block';
+              } else {
+                section.style.display = 'none';
+              }
+            }
+          </script>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Dropdown functions
+    function toggleAdminDropdown(trigger) {
+      const container = trigger.closest('.custom-dropdown');
+      const menu = container.querySelector('.dropdown-menu');
+      const icon = trigger.querySelector('.material-symbols-outlined');
+      
+      const isOpen = menu.classList.contains('active');
+      
+      // Close others
+      document.querySelectorAll('.dropdown-menu.active').forEach(m => {
+        if (m !== menu) {
+          m.classList.remove('active');
+          m.parentElement.querySelector('.dropdown-trigger').classList.remove('active');
+          m.parentElement.querySelector('.material-symbols-outlined').classList.remove('rotate-180');
+        }
+      });
+
+      menu.classList.toggle('active');
+      trigger.classList.toggle('active');
+      icon.classList.toggle('rotate-180');
+    }
+
+    function selectAdminDropdownItem(item, val) {
+      const container = item.closest('.custom-dropdown');
+      const label = item.innerText.trim();
+      const trigger = container.querySelector('.dropdown-trigger');
+      const labelSpan = trigger.querySelector('.val-label');
+      const hiddenInput = container.querySelector('input[type="hidden"]');
+      
+      container.setAttribute('data-value', val);
+      if (hiddenInput) {
+        hiddenInput.value = val;
+        hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      labelSpan.textContent = label;
+      
+      // Update selected state
+      container.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('selected'));
+      item.classList.add('selected');
+      
+      // Close
+      container.querySelector('.dropdown-menu').classList.remove('active');
+      trigger.classList.remove('active');
+      trigger.querySelector('.material-symbols-outlined').classList.remove('rotate-180');
+    }
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.custom-dropdown')) {
+        document.querySelectorAll('.dropdown-menu.active').forEach(m => {
+          m.classList.remove('active');
+          m.parentElement.querySelector('.dropdown-trigger').classList.remove('active');
+          m.parentElement.querySelector('.material-symbols-outlined').classList.remove('rotate-180');
+        });
+      }
+    });
+
+    function adminShowToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type === 'error' ? 'error' : (type === 'info' ? 'info' : '')}`;
+      toast.innerHTML = `
+        <span class="material-symbols-outlined" style="color:${type === 'error' ? '#ef4444' : (type === 'info' ? '#3b82f6' : '#10b981')}">
+          ${type === 'error' ? 'error' : (type === 'info' ? 'info' : 'check_circle')}
+        </span>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    const ADMIN_TOKEN_KEY = "lok_admin_basic_token";
+    const ADMIN_USER_KEY = "lok_admin_user";
+    const ADMIN_REMEMBER_USER_KEY = "lok_admin_remember_user";
+    const ADMIN_REMEMBER_SESSION_KEY = "lok_admin_remember_session";
+    const ADMIN_TOKEN_EXPIRES_KEY = "lok_admin_token_expires_at";
+    let token = "";
+    let editingTenantId = "";
+
+    function syncAdminTokenState() {
+      window.token = token || "";
+      const frame = document.getElementById("platform-analytics-frame");
+      if (frame && token) {
+        frame.src = `/platform_analytics_v2.html?token=${encodeURIComponent(token)}`;
+      }
+    }
+
+    function headers() {
+      return { "Content-Type": "application/json", "Authorization": "Basic " + token };
+    }
+
+    function authHeaders() {
+      return token ? headers() : { "Content-Type": "application/json" };
+    }
+
+    function clearAdminSavedSession() {
+      localStorage.removeItem(ADMIN_TOKEN_KEY);
+      localStorage.removeItem(ADMIN_TOKEN_EXPIRES_KEY);
+      localStorage.removeItem(ADMIN_REMEMBER_SESSION_KEY);
+    }
+
+    function saveAdminToken(value, username, rememberUser = false, rememberSession = false) {
+      if (rememberUser && username) {
+        localStorage.setItem(ADMIN_USER_KEY, username || "");
+        localStorage.setItem(ADMIN_REMEMBER_USER_KEY, "1");
+      } else {
+        localStorage.removeItem(ADMIN_USER_KEY);
+        localStorage.removeItem(ADMIN_REMEMBER_USER_KEY);
+      }
+      if (rememberSession && value) {
+        localStorage.setItem(ADMIN_TOKEN_KEY, value || "");
+        localStorage.setItem(ADMIN_TOKEN_EXPIRES_KEY, String(Date.now() + 30 * 24 * 60 * 60 * 1000));
+        localStorage.setItem(ADMIN_REMEMBER_SESSION_KEY, "1");
+      } else {
+        clearAdminSavedSession();
+      }
+    }
+
+    function clearAdminToken() {
+      clearAdminSavedSession();
+      if (localStorage.getItem(ADMIN_REMEMBER_USER_KEY) !== "1") {
+        localStorage.removeItem(ADMIN_USER_KEY);
+      }
+      token = "";
+      syncAdminTokenState();
+    }
+
+    function getAdminSavedAuth() {
+      const rememberUser = localStorage.getItem(ADMIN_REMEMBER_USER_KEY) === "1";
+      const rememberSession = localStorage.getItem(ADMIN_REMEMBER_SESSION_KEY) === "1";
+      const expiresAt = Number(localStorage.getItem(ADMIN_TOKEN_EXPIRES_KEY) || 0);
+      if (rememberSession && (!expiresAt || expiresAt <= Date.now())) {
+        clearAdminSavedSession();
+      }
+      return {
+        username: rememberUser ? (localStorage.getItem(ADMIN_USER_KEY) || "") : "",
+        token: localStorage.getItem(ADMIN_TOKEN_KEY) || "",
+        rememberUser,
+        rememberSession: localStorage.getItem(ADMIN_REMEMBER_SESSION_KEY) === "1",
+      };
+    }
+
+    function showDashboard() {
+      document.getElementById("login-screen").classList.add("hidden");
+      document.getElementById("dashboard").classList.remove("hidden");
+      syncAdminTokenState();
+    }
+
+    function showLogin() {
+      document.getElementById("dashboard").classList.add("hidden");
+      document.getElementById("login-screen").classList.remove("hidden");
+    }
+
+    const adminSectionPathMap = {
+      tenants: "/admin",
+      analytics: "/platform/analytics",
+      logs: "/platform/logs"
+    };
+    const adminPathSectionMap = {
+      "/admin": "tenants",
+      "/admin-v2": "tenants",
+      "/platform/tenants": "tenants",
+      "/platform/analytics": "analytics",
+      "/platform/logs": "logs",
+      "/platform-logs-v2": "logs",
+      "/platform-tenants-v2": "tenants"
+    };
+
+    function switchAdminSection(section, syncUrl = true) {
+      if (syncUrl) {
+        const nextPath = adminSectionPathMap[section] || "/admin";
+        const nextUrl = `${nextPath}${location.search || ""}`;
+        if (`${location.pathname}${location.search || ""}` !== nextUrl) {
+          history.replaceState(null, "", nextUrl);
+        }
+      }
+      document.querySelectorAll("[data-section-btn]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.sectionBtn === section);
+      });
+      document.querySelectorAll("[data-section]").forEach((pane) => {
+        pane.classList.toggle("active", pane.dataset.section === section);
+        pane.classList.toggle("hidden", pane.dataset.section !== section);
+      });
+      const titleMap = {
+        tenants: ["企业账户管理", "创建、停用、维护企业租户账号，并发放租户控制台入口。"],
+        analytics: ["平台统计报表", "平台运营数据总览、租户分析与资源监控。"],
+        logs: ["平台总日志", "查看平台请求、护栏事件、缓存和知识命中等全局运行数据。"]
+      };
+      const [title, subtitle] = titleMap[section] || titleMap.tenants;
+      document.getElementById("page-title").textContent = title;
+      document.getElementById("page-subtitle").textContent = subtitle;
+    }
+
+    function initAdminSectionFromLocation() {
+      const hashSection = (location.hash || "").replace("#", "");
+      const section = adminPathSectionMap[location.pathname] || hashSection || "tenants";
+      if (section === "logs" || section === "tenants") {
+        switchAdminSection(section, false);
+      } else {
+        switchAdminSection("tenants", false);
+      }
+    }
+
+    async function authedFetch(url, options = {}) {
+      const response = await fetch(url, {
+        ...options,
+        headers: { ...(options.headers || {}), "Authorization": "Basic " + token }
+      });
+      if (response.status === 401) {
+        clearAdminToken();
+        location.reload();
+        throw new Error("登录已失效");
+      }
+      return response;
+    }
+
+    async function bootstrapAdmin() {
+      syncAdminTokenState();
+      showDashboard();
+      await Promise.all([loadTenants(), loadObservabilityPanel(), loadChatLogs(1)]);
+    }
+
+    async function doLogin() {
+      const username = document.getElementById("login-user").value.trim();
+      const password = document.getElementById("login-pass").value.trim();
+      const rememberUser = !!document.getElementById("login-remember-user")?.checked;
+      const rememberSession = !!document.getElementById("login-remember-session")?.checked;
+      const msg = document.getElementById("login-msg");
+      const btn = document.getElementById("login-btn");
+
+      if (!username) {
+        msg.textContent = "请输入管理员账号";
+        return;
+      }
+      if (!password) {
+        msg.textContent = "请输入管理员密码";
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "验证中...";
+      msg.textContent = "";
+
+      try {
+        const response = await fetch("/api/admin/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) {
+          throw new Error(data.msg || "登录失败");
+        }
+        token = data.token;
+        syncAdminTokenState();
+        saveAdminToken(token, username, rememberUser, rememberSession);
+        await bootstrapAdmin();
+      } catch (error) {
+        msg.textContent = error.message || "登录失败";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "登录平台后台";
+      }
+    }
+
+    function doAdminLogout() {
+      clearAdminToken();
+      token = "";
+      syncAdminTokenState();
+      location.reload();
+    }
+
+    function formatDate(value) {
+      if (!value) return "-";
+      try {
+        return new Date(value).toLocaleString("zh-CN");
+      } catch (error) {
+        return String(value);
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text == null ? "" : String(text);
+      return div.innerHTML;
+    }
+
+    async function loadTenants() {
+      const response = await authedFetch("/api/admin/tenants", { headers: authHeaders() });
+      const data = await response.json();
+      const items = data.items || [];
+      const root = document.getElementById("tenant-list");
+      document.getElementById("tenant-count-card").textContent = String(items.length);
+      document.getElementById("tenant-enabled-card").textContent = String(items.filter((item) => item.enabled).length);
+      const latest = items[0];
+      document.getElementById("tenant-latest-card").textContent = latest ? `${latest.tenant_name} · ${formatDate(latest.created_at)}` : "暂无记录";
+      if (!items.length) {
+        root.innerHTML = `<div class="flex flex-col items-center justify-center p-8 border border-dashed border-line rounded-2xl"><span class="material-symbols-outlined text-4xl text-textMuted mb-4">domain_off</span><p class="text-textMuted text-center">当前还没有企业租户，请先创建第一个企业账户。</p></div>`;
+        return;
+      }
+      root.innerHTML = items.map((item) => {
+        const statusClass = item.enabled ? "bg-success/10 text-success" : "bg-danger/10 text-danger";
+        const statusText = item.enabled ? "已启用" : "已停用";
+        const avatarText = item.tenant_name ? item.tenant_name.charAt(0) : item.tenant_id.charAt(0);
+        return `
+          <div class="flex items-center justify-between p-5 border border-line rounded-2xl hover:bg-panelSoft/50 transition-colors">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-lg">
+                ${escapeHtml(avatarText)}
+              </div>
+              <div>
+                <div class="font-semibold text-textMain">${escapeHtml(item.tenant_name)}</div>
+                <div class="text-sm text-textMuted mt-0.5">${escapeHtml(item.tenant_id)} · ${escapeHtml(item.admin_username)}</div>
+                <div class="text-xs text-textMuted mt-1">创建时间: ${escapeHtml(item.created_at || "-")}</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="px-3 py-1 rounded-full text-xs font-semibold ${statusClass}">${statusText}</span>
+              <button type="button" class="inline-flex items-center gap-1 rounded-xl border border-line bg-white px-3 py-2 text-xs font-semibold transition hover:bg-panelSoft" onclick='prefillTenant(${JSON.stringify(item)})'>
+                <span class="material-symbols-outlined text-[16px]">edit</span> 编辑
+              </button>
+              <button type="button" class="inline-flex items-center gap-1 rounded-xl border border-line bg-white px-3 py-2 text-xs font-semibold transition hover:bg-panelSoft text-danger" onclick='toggleTenantStatus("${item.tenant_id}", ${!item.enabled})'>
+                <span class="material-symbols-outlined text-[16px]">${item.enabled ? 'pause_circle' : 'play_circle'}</span> ${item.enabled ? '停用' : '启用'}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function prefillTenant(item) {
+      editingTenantId = item.tenant_id || "";
+      document.getElementById("tenant-form-mode").textContent = `编辑企业租户`;
+      document.getElementById("tenant-id").value = item.tenant_id || "";
+      document.getElementById("tenant-name").value = item.tenant_name || "";
+      document.getElementById("tenant-admin").value = item.admin_username || "";
+      document.getElementById("tenant-password").value = "";
+      document.getElementById("tenant-id").disabled = true;
+      adminShowToast(`已载入 ${item.tenant_name}，可立即编辑。`, 'info');
+    }
+
+    function clearTenantForm() {
+      editingTenantId = "";
+      document.getElementById("tenant-form-mode").textContent = "添加/编辑企业租户";
+      document.getElementById("tenant-id").disabled = false;
+      document.getElementById("tenant-id").value = "";
+      document.getElementById("tenant-name").value = "";
+      document.getElementById("tenant-admin").value = "";
+      document.getElementById("tenant-password").value = "";
+    }
+
+    function showAdminModal({ title, body, icon = 'help', okText = '确定', cancelText = '取消', isDanger = false }) {
+      return new Promise((resolve) => {
+        const modal = document.getElementById('admin-modal');
+        const titleEl = document.getElementById('admin-modal-title');
+        const bodyEl = document.getElementById('admin-modal-body');
+        const iconEl = document.getElementById('admin-modal-icon');
+        const okBtn = document.getElementById('admin-modal-ok-btn');
+        const cancelBtn = document.getElementById('admin-modal-cancel-btn');
+
+        titleEl.textContent = title;
+        bodyEl.textContent = body;
+        iconEl.querySelector('span').textContent = icon;
+        okBtn.textContent = okText;
+        cancelBtn.textContent = cancelText;
+
+        if (isDanger) {
+          iconEl.classList.add('danger');
+          okBtn.classList.add('danger');
+        } else {
+          iconEl.classList.remove('danger');
+          okBtn.classList.remove('danger');
+        }
+
+        const close = (res) => {
+          modal.classList.remove('active');
+          window.onclick = null;
+          resolve(res);
+        };
+
+        modal.classList.add('active');
+        okBtn.onclick = () => close(true);
+        cancelBtn.onclick = () => close(false);
+        
+        window.onclick = (e) => {
+          if (e.target === modal) close(false);
+        };
+      });
+    }
+
+    async function saveTenant() {
+      const payload = {
+        tenant_id: document.getElementById("tenant-id").value.trim(),
+        tenant_name: document.getElementById("tenant-name").value.trim(),
+        admin_username: document.getElementById("tenant-admin").value.trim(),
+        admin_password: document.getElementById("tenant-password").value.trim()
+      };
+      try {
+        const response = await authedFetch("/api/admin/tenants", {
+          method: editingTenantId ? "PUT" : "POST",
+          headers: headers(),
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) {
+          throw new Error(data.msg || "保存失败");
+        }
+        adminShowToast(`✅ ${editingTenantId ? '已更新' : '已新创建'}企业：${data.tenant.tenant_name}`, 'success');
+        clearTenantForm();
+        await loadTenants();
+      } catch (error) {
+        adminShowToast(`❌ 操作失败: ${error.message}`, 'error');
+      }
+    }
+
+    async function toggleTenantStatus(tenantId, enabled) {
+      const actionText = enabled ? '启用' : '停用';
+      const confirmed = await showAdminModal({
+        title: `确认${actionText}`,
+        body: `确定要${actionText}该企业租户吗？`,
+        icon: enabled ? 'play_circle' : 'pause_circle',
+        okText: '确定',
+        cancelText: '取消',
+        isDanger: !enabled
+      });
+      
+      if (!confirmed) return;
+      
+      try {
+        const response = await authedFetch(`/api/admin/tenants/${tenantId}/status`, {
+          method: 'PUT',
+          headers: headers(),
+          body: JSON.stringify({ enabled })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) {
+          throw new Error(data.msg || "操作失败");
+        }
+        adminShowToast(`✅ 已${actionText}企业租户`, 'success');
+        await loadTenants();
+      } catch (error) {
+        adminShowToast(`❌ 操作失败: ${error.message}`, 'error');
+      }
+    }
+
+    async function loadChatLogs(page = 1) {
+      const phone = document.getElementById("chat-log-phone").value.trim();
+      const response = await authedFetch(`/api/admin/chat-logs?page=${page}&phone=${encodeURIComponent(phone)}`, { headers: authHeaders() });
+      const data = await response.json();
+      const logs = data.logs || [];
+      const root = document.getElementById("chat-log-list");
+      if (!logs.length) {
+        root.innerHTML = `<div class="px-6 py-10 text-center text-textMuted">当前没有平台聊天日志。</div>`;
+        return;
+      }
+      root.innerHTML = logs.map((log) => `
+        <div class="log-item">
+          <div class="flex flex-wrap items-center gap-3 mb-2">
+            <span class="status-badge ${log.status === 'success' ? 'success' : log.status === 'error' ? 'error' : 'warning'}">${escapeHtml(log.phone || "匿名")}</span>
+            <span class="text-xs text-textMuted">${escapeHtml(log.created_at || "-")}</span>
+          </div>
+          <div class="font-semibold mb-2">${escapeHtml(log.question || "")}</div>
+          <div class="text-sm text-textMuted leading-7">${escapeHtml(log.answer || "").slice(0, 260) || "-"}</div>
+          <div class="text-sm text-textMuted leading-7 mt-3">
+            画像：<b>${escapeHtml(log.retrieval_trace?.query_profile || "-")}</b> ·
+            路径：<b>${escapeHtml(log.retrieval_trace?.retrieval_route || "-")}</b> ·
+            改写：<b>${log.retrieval_trace?.rewrite_applied ? "是" : "否"}</b> ·
+            重试：<b>${escapeHtml(log.retrieval_trace?.retrieval_attempts || 0)}</b>
+          </div>
+          <div class="text-sm text-textMuted leading-7 mt-2">
+            命中知识：<b>${escapeHtml(((log.knowledge_hits || []).slice(0, 2).map((hit) => hit.title || hit.source || hit.file || "-")).join(" / ") || "-")}</b>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderEvaluationLogs(logs) {
+      const root = document.getElementById("evaluation-log-list");
+      if (!logs.length) {
+        root.innerHTML = `<div class="px-6 py-10 text-center text-textMuted">当前没有评测记录。</div>`;
+        return;
+      }
+      root.innerHTML = logs.map((item) => `
+        ${(() => {
+          const quality = item.config_snapshot?.quality_summary || {};
+          const faithfulness = item.avg_faithfulness ?? quality.avg_faithfulness;
+          const answerRelevance = item.avg_answer_relevance ?? quality.avg_answer_relevance;
+          const proxy = item.avg_answer_relevance_proxy ?? 0;
+          return `
+        <div class="log-item">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+            <div class="font-semibold">${escapeHtml(item.name || "未命名评测")}</div>
+            <span class="status-badge success">${escapeHtml(item.created_at || "-")}</span>
+          </div>
+          <div class="text-sm text-textMuted leading-7">
+            hit@1：<b>${escapeHtml(item.hit_at_1 || 0)}</b> ·
+            hit@3：<b>${escapeHtml(item.hit_at_3 || 0)}</b> ·
+            hit@5：<b>${escapeHtml(item.hit_at_5 || 0)}</b> ·
+            平均分：<b>${escapeHtml(item.avg_top_score || 0)}</b>
+          </div>
+          <div class="text-sm text-textMuted leading-7 mt-2">
+            Faithfulness：<b>${escapeHtml(faithfulness ?? "-")}</b> ·
+            Relevancy：<b>${escapeHtml(answerRelevance ?? "-")}</b> ·
+            代理相关性：<b>${escapeHtml(proxy)}</b>
+          </div>
+          <div class="text-sm text-textMuted leading-7 mt-2">
+            评测引擎：<b>${escapeHtml(quality.provider || "builtin")}</b> ·
+            状态：<b>${escapeHtml(quality.status || "-")}</b> ·
+            原因：<b>${escapeHtml(quality.reason || "-")}</b>
+          </div>
+          <div class="text-sm text-textMuted leading-7 mt-2">
+            最近题目：<b>${escapeHtml(((item.detail || []).slice(0, 2).map((row) => row.question || "-")).join(" / ") || "-")}</b>
+          </div>
+        </div>
+      `;})()}
+      `).join("");
+    }
+
+    function renderSchedulerPanel(status) {
+      const root = document.getElementById("scheduler-panel");
+      const nextJobs = (status.next_jobs || []).map((job) => `
+        <div class="log-item">
+          <div class="font-semibold">${escapeHtml(job.source_name || job.source_id || "-")}</div>
+          <div class="text-sm text-textMuted mt-2">租户：${escapeHtml(job.tenant_name || job.tenant_id || "-")} · 知识库：${escapeHtml(job.library_id || job.tier || "-")} · 自动：${job.auto_ingest ? "是" : "否"}</div>
+        </div>
+      `).join("");
+      root.innerHTML = `
+        <div class="log-item">
+          <div class="text-sm text-textMuted leading-7">
+            运行中：<b>${status.running ? "是" : "否"}</b> ·
+            总任务数：<b>${escapeHtml(status.total_jobs || 0)}</b> ·
+            待执行：<b>${escapeHtml(status.due_jobs || 0)}</b> ·
+            24h 成功：<b>${escapeHtml(status.success_runs_24h || 0)}</b> ·
+            24h 失败：<b>${escapeHtml(status.failed_runs_24h || 0)}</b>
+          </div>
+          <div class="text-sm text-textMuted leading-7 mt-2">
+            最近成功：<b>${escapeHtml(status.last_success_at || "-")}</b> ·
+            最近失败：<b>${escapeHtml(status.last_failure_at || "-")}</b>
+          </div>
+          <div class="text-sm text-textMuted leading-7 mt-2">
+            心跳：<b>${escapeHtml(status.last_tick_at || "-")}</b> ·
+            最近摘要：<b>${escapeHtml(status.last_run_summary || "-")}</b>
+          </div>
+        </div>
+        ${nextJobs || `<div class="px-6 py-10 text-center text-textMuted">当前没有待执行任务。</div>`}
+      `;
+    }
+
+    async function runEvaluation() {
+      adminShowToast("正在启动评测任务...", 'info');
+      try {
+        const name = document.getElementById("evaluation-name").value.trim() || "平台检索评测";
+        const cases = JSON.parse(document.getElementById("evaluation-cases").value.trim() || "[]");
+        const response = await authedFetch("/api/admin/evaluations/run", {
+          method: "POST",
+          headers: headers(),
+          body: JSON.stringify({ name, cases })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) {
+          throw new Error(data.msg || "评测启动失败");
+        }
+        const result = data.result || {};
+        adminShowToast(`✅ 评测完成！hit@1=${result.hit_at_1 || 0} · faithfulness=${result.avg_faithfulness ?? '-'}`, 'success');
+        await loadObservabilityPanel();
+      } catch (error) {
+        adminShowToast(`❌ 评测失败: ${error.message}`, 'error');
+      }
+    }
+
+    async function loadObservabilityPanel() {
+      const [summaryRes, requestRes, eventRes, evaluationRes, schedulerRes] = await Promise.all([
+        authedFetch("/api/admin/observability/summary", { headers: authHeaders() }),
+        authedFetch("/api/admin/observability/requests?page=1", { headers: authHeaders() }),
+        authedFetch("/api/admin/guardrail-events?page=1", { headers: authHeaders() }),
+        authedFetch("/api/admin/evaluations?page=1", { headers: authHeaders() }),
+        authedFetch("/api/admin/crawler-scheduler", { headers: authHeaders() })
+      ]);
+      const summaryData = await summaryRes.json();
+      const requestData = await requestRes.json();
+      const eventData = await eventRes.json();
+      const evaluationData = await evaluationRes.json();
+      const schedulerData = await schedulerRes.json();
+      const summary = summaryData.summary || {};
+      const cache = summaryData.cache || {};
+      const retrieval = summary.retrieval || {};
+      document.getElementById("metric-request-count").textContent = String(summary.requests_24h ?? summary.total_requests ?? 0);
+      document.getElementById("metric-latency").textContent = `${summary.avg_latency_ms ?? 0}ms`;
+      document.getElementById("metric-cache-backend").textContent = cache.backend || "-";
+      const dense = retrieval.dense || {};
+      document.getElementById("metric-vector-store").textContent = dense.ready ? `${dense.provider || 'dense'} 已连通` : "未就绪";
+
+      const requestRoot = document.getElementById("request-log-list");
+      const requestLogs = requestData.logs || [];
+      requestRoot.innerHTML = requestLogs.length ? requestLogs.map((item) => `
+        <div class="log-item">
+          <div class="flex flex-wrap items-center gap-3 mb-2">
+            <span class="status-badge ${Number(item.status_code) >= 400 ? "error" : "success"}">${escapeHtml(item.path || "-")}</span>
+            <span class="text-xs text-textMuted">${escapeHtml(item.method || "GET")}</span>
+            <span class="text-xs ${Number(item.status_code) >= 400 ? "text-danger" : "text-success"} font-semibold">${escapeHtml(item.status_code || "-")}</span>
+            <span class="text-xs text-textMuted">${escapeHtml(item.created_at || "-")}</span>
+          </div>
+          <div class="text-sm text-textMuted">耗时：${escapeHtml(item.duration_ms || 0)}ms · 用户：${escapeHtml(item.user_id || "-")} · 租户：${escapeHtml(item.tenant_id || "-")}</div>
+        </div>
+      `).join("") : `<div class="px-6 py-10 text-center text-textMuted">暂无请求日志。</div>`;
+
+      const eventRoot = document.getElementById("guardrail-event-list");
+      const eventLogs = eventData.logs || [];
+      eventRoot.innerHTML = eventLogs.length ? eventLogs.map((item) => `
+        <div class="log-item">
+          <div class="flex flex-wrap items-center gap-3 mb-2">
+            <span class="status-badge ${item.action === "block" ? "error" : "warning"}">${escapeHtml(item.rule_name || item.action || "guardrail")}</span>
+            <span class="text-xs text-textMuted">${escapeHtml(item.stage || "-")}</span>
+            <span class="text-xs ${item.action === "block" ? "text-danger" : "text-warning"} font-semibold">${escapeHtml(item.action || "-")}</span>
+            <span class="text-xs text-textMuted">${escapeHtml(item.created_at || "-")}</span>
+          </div>
+          <div class="text-sm text-textMuted">详情：${escapeHtml(item.detail || "-")}</div>
+        </div>
+      `).join("") : `<div class="px-6 py-10 text-center text-textMuted">暂无护栏事件。</div>`;
+
+      renderEvaluationLogs(evaluationData.logs || []);
+      renderSchedulerPanel((schedulerData || {}).status || {});
+    }
+
+    async function bootstrap() {
+      updateAdminPortBadge();
+      const saved = getAdminSavedAuth();
+      const loginUserEl = document.getElementById("login-user");
+      const rememberUserEl = document.getElementById("login-remember-user");
+      const rememberSessionEl = document.getElementById("login-remember-session");
+      if (loginUserEl && saved.username) loginUserEl.value = saved.username;
+      if (rememberUserEl) rememberUserEl.checked = !!saved.rememberUser;
+      if (rememberSessionEl) rememberSessionEl.checked = !!saved.rememberSession;
+      if (rememberSessionEl && rememberUserEl) {
+        rememberSessionEl.addEventListener("change", () => {
+          if (rememberSessionEl.checked) rememberUserEl.checked = true;
+        });
+        rememberUserEl.addEventListener("change", () => {
+          if (!rememberUserEl.checked) rememberSessionEl.checked = false;
+        });
+      }
+      const savedToken = saved.token;
+      if (!savedToken) {
+        showLogin();
+        return;
+      }
+      token = savedToken;
+      syncAdminTokenState();
+      try {
+        await bootstrapAdmin();
+        initAdminSectionFromLocation();
+      } catch (error) {
+        clearAdminToken();
+        showLogin();
+      }
+    }
+
+    document.getElementById("login-pass").addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        doLogin();
+      }
+    });
+
+    function updateAdminPortBadge() {
+      const badge = document.getElementById("admin-port-badge");
+      if (!badge) return;
+      const protocol = String(location.protocol || "").toLowerCase();
+      const fallbackPort = protocol === "https:" ? "443" : "80";
+      badge.textContent = `PORT: ${location.port || fallbackPort}`;
+    }
+
+    window.addEventListener("hashchange", initAdminSectionFromLocation);
+    window.addEventListener("popstate", initAdminSectionFromLocation);
+    window.addEventListener("load", bootstrap);
+  </script>
+</body>
+
+</html>

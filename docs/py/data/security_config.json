@@ -1,0 +1,27 @@
+{
+  "enabled": true,
+  "input_max_length": 2000,
+  "block_words": [
+    "木马",
+    "后门",
+    "撞库",
+    "拖库",
+    "爆破"
+  ],
+  "prompt_injection_patterns": [
+    "忽略以上",
+    "忽略之前",
+    "输出系统提示词",
+    "显示系统提示词",
+    "泄露提示词",
+    "导出知识库原文",
+    "输出管理员密码",
+    "显示全部知识"
+  ],
+  "redaction": {
+    "phone": true,
+    "email": true,
+    "id_card": true,
+    "bank_card": true
+  }
+}

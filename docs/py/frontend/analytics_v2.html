@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>统计报表 · 企业级 RAG SaaS</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-deep: #1d4ed8;
+      --surface: #f8fafc;
+      --card: #ffffff;
+      --line: #dbe6f3;
+      --text: #0f172a;
+      --muted: #64748b;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(180deg, #f8fbff 0%, #f8fafc 100%);
+      color: var(--text);
+    }
+    .page {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 32px 40px 48px;
+    }
+    .header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      margin: 0;
+    }
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .range-btn {
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .range-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 10px 30px rgba(37, 99, 235, 0.18);
+    }
+    .grid {
+      display: grid;
+      gap: 20px;
+    }
+    .cards {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-bottom: 24px;
+    }
+    .panel-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-bottom: 24px;
+    }
+    .panel, .metric-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: 0 14px 50px rgba(15, 23, 42, 0.04);
+    }
+    .metric-card {
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-deep));
+    }
+    .metric-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .metric-value {
+      margin-top: 10px;
+      font-size: 34px;
+      line-height: 1;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 800;
+    }
+    .metric-meta {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .panel {
+      padding: 24px;
+    }
+    .chart-shell {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      min-height: 280px;
+      max-height: 280px;
+    }
+    .chart-shell.compact {
+      height: 240px;
+      min-height: 240px;
+      max-height: 240px;
+    }
+    .chart-shell canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+    .panel-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: -8px;
+      margin-bottom: 18px;
+    }
+    .list {
+      display: grid;
+      gap: 12px;
+    }
+    .list-item {
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fbfdff;
+    }
+    .rank {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      background: #eff6ff;
+      color: var(--primary);
+      font-family: 'Manrope', sans-serif;
+    }
+    .item-title {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+    .item-meta {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .item-value {
+      font-weight: 800;
+      font-family: 'Manrope', sans-serif;
+      font-size: 18px;
+      white-space: nowrap;
+    }
+    .empty {
+      padding: 32px 16px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+    }
+    .loading {
+      padding: 48px 16px;
+      text-align: center;
+      color: var(--muted);
+    }
+    @media (max-width: 1100px) {
+      .panel-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .page { padding: 24px 16px 40px; }
+      .header { flex-direction: column; }
+      .title { font-size: 24px; }
+      .metric-value { font-size: 28px; }
+      .list-item { grid-template-columns: 36px 1fr; }
+      .item-value { grid-column: 2; }
+      .chart-shell,
+      .chart-shell.compact {
+        height: 220px;
+        min-height: 220px;
+        max-height: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <div>
+        <h1 class="title">
+          <span class="material-symbols-outlined" style="font-size:32px;color:var(--primary);">analytics</span>
+          统计报表
+        </h1>
+        <p class="subtitle">基于真实问答、请求和知识命中日志生成的租户使用看板。</p>
+      </div>
+      <div class="toolbar">
+        <button class="range-btn active" id="days-7" onclick="loadAnalytics(7)">近 7 天</button>
+        <button class="range-btn" id="days-30" onclick="loadAnalytics(30)">近 30 天</button>
+      </div>
+    </div>
+
+    <div class="grid cards" id="kpi-cards">
+      <div class="loading">加载中...</div>
+    </div>
+
+    <div class="grid panel-grid">
+      <section class="panel">
+        <div class="panel-title">
+          <span class="material-symbols-outlined" style="color:var(--primary);">show_chart</span>
+          每日趋势
+        </div>
+        <div class="panel-subtitle">问答量、活跃用户随时间变化</div>
+        <div class="chart-shell compact"><canvas id="dailyTrendsChart"></canvas></div>
+      </section>
+      <section class="panel">
+        <div class="panel-title">
+          <span class="material-symbols-outlined" style="color:var(--primary);">schedule</span>
+          活跃时段分布
+        </div>
+        <div class="panel-subtitle">按小时统计真实问答高峰</div>
+        <div class="chart-shell compact"><canvas id="hourlyDistChart"></canvas></div>
+      </section>
+    </div>
+
+    <div class="grid panel-grid">
+      <section class="panel">
+        <div class="panel-title">
+          <span class="material-symbols-outlined" style="color:var(--primary);">smart_toy</span>
+          智能体使用排行
+        </div>
+        <div class="panel-subtitle">按问答量统计最近使用最频繁的智能体</div>
+        <div class="chart-shell"><canvas id="agentUsageChart"></canvas></div>
+      </section>
+      <section class="panel">
+        <div class="panel-title">
+          <span class="material-symbols-outlined" style="color:var(--primary);">group</span>
+          活跃用户排行
+        </div>
+        <div class="panel-subtitle">按真实问答次数排序</div>
+        <div id="activeUsersList" class="list"></div>
+      </section>
+    </div>
+
+    <div class="grid panel-grid">
+      <section class="panel">
+        <div class="panel-title">
+          <span class="material-symbols-outlined" style="color:var(--primary);">help</span>
+          热门问题
+        </div>
+        <div class="panel-subtitle">用户最近最常提问的问题</div>
+        <div id="topQuestionsList" class="list"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-title">
+          <span class="material-symbols-outlined" style="color:var(--primary);">monitoring</span>
+          使用摘要
+        </div>
+        <div class="panel-subtitle">从请求日志中合并出的关键观测信息</div>
+        <div id="summaryInsights" class="list"></div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    function resolveTenantToken() {
+      const searchToken = new URLSearchParams(window.location.search).get('token');
+      if (searchToken) return searchToken;
+      try {
+        if (window.parent && window.parent !== window && window.parent.tenantToken) {
+          return window.parent.tenantToken;
+        }
+      } catch (_) {}
+      return localStorage.getItem('lok_tenant_basic_token') || '';
+    }
+    const charts = {};
+    let currentDays = 7;
+
+    function getThemeColor(name, fallback) {
+      const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      return value || fallback;
+    }
+
+    function setActiveDays(days) {
+      ['7', '30'].forEach((item) => {
+        document.getElementById(`days-${item}`).classList.toggle('active', Number(item) === days);
+      });
+    }
+
+    async function loadTenantTheme() {
+      const tenantToken = resolveTenantToken();
+      if (!tenantToken) return;
+      try {
+      const response = await fetch('/api/tenant/app-config', {
+        headers: { Authorization: 'Basic ' + tenantToken }
+      });
+        const payload = await response.json();
+        const theme = payload?.config?.theme;
+        if (!theme) return;
+        document.documentElement.style.setProperty('--primary', theme.primary || theme.accent || '#2563eb');
+        document.documentElement.style.setProperty('--primary-deep', theme.primary_deep || theme.accent_strong || '#1d4ed8');
+        document.documentElement.style.setProperty('--surface', theme.bg || '#f8fafc');
+        document.documentElement.style.setProperty('--card', theme.surface || '#ffffff');
+        document.documentElement.style.setProperty('--line', theme.line || '#dbe6f3');
+        document.documentElement.style.setProperty('--text', theme.text || '#0f172a');
+        document.documentElement.style.setProperty('--muted', theme.muted || '#64748b');
+        document.documentElement.style.setProperty('--danger', theme.danger || '#ef4444');
+      } catch (_) {}
+    }
+
+    async function tenantFetch(url) {
+      const response = await fetch(url, {
+        headers: { Authorization: 'Basic ' + resolveTenantToken() }
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `HTTP ${response.status}`);
+      }
+      return response.json();
+    }
+
+    function formatNumber(value) {
+      return Number(value || 0).toLocaleString();
+    }
+
+    function maskPhone(phone) {
+      const clean = String(phone || '').trim();
+      if (clean.length < 7) return clean || '未记录';
+      return `${clean.slice(0, 3)}****${clean.slice(-4)}`;
+    }
+
+    function renderKPIs(data) {
+      const cards = [
+        ['总问答数', formatNumber(data.total_chats), `近 ${currentDays} 天真实对话`],
+        ['活跃用户数', formatNumber(data.active_users), '独立用户'],
+        ['总请求数', formatNumber(data.total_requests), '接口调用'],
+        ['平均响应时间', `${formatNumber(data.avg_response_time)}ms`, '请求日志平均耗时'],
+        ['知识命中率', `${data.knowledge_hit_rate || 0}%`, '命中知识库的问答占比'],
+        ['错误率', `${data.error_rate || 0}%`, '请求失败占比'],
+      ];
+      document.getElementById('kpi-cards').innerHTML = cards.map(([label, value, meta]) => `
+        <article class="metric-card">
+          <div class="metric-label">${label}</div>
+          <div class="metric-value">${value}</div>
+          <div class="metric-meta">${meta}</div>
+        </article>
+      `).join('');
+    }
+
+    function destroyChart(key) {
+      if (charts[key]) charts[key].destroy();
+    }
+
+    function renderDailyTrends(rows) {
+      destroyChart('daily');
+      const ctx = document.getElementById('dailyTrendsChart').getContext('2d');
+      const labels = rows.map(item => item.date);
+      charts.daily = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: '问答数',
+              data: rows.map(item => item.chats),
+              borderColor: getThemeColor('--primary', '#2563eb'),
+              backgroundColor: 'rgba(37, 99, 235, 0.08)',
+              fill: true,
+              borderWidth: 3,
+              tension: 0.35
+            },
+            {
+              label: '活跃用户',
+              data: rows.map(item => item.users),
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.08)',
+              fill: true,
+              borderWidth: 3,
+              tension: 0.35
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+
+    function renderHourlyDist(rows) {
+      destroyChart('hourly');
+      const ctx = document.getElementById('hourlyDistChart').getContext('2d');
+      charts.hourly = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: rows.map(item => `${String(item.hour).padStart(2, '0')}:00`),
+          datasets: [{
+            label: '问答数',
+            data: rows.map(item => item.count),
+            backgroundColor: 'rgba(37, 99, 235, 0.72)',
+            borderColor: getThemeColor('--primary', '#2563eb'),
+            borderWidth: 1.5,
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+
+    function renderAgentUsage(rows) {
+      destroyChart('agentUsage');
+      const canvas = document.getElementById('agentUsageChart');
+      const panel = canvas.parentElement;
+      if (!rows.length) {
+        panel.innerHTML = '<div class="empty">近期开启的问答中还没有智能体使用记录。</div>';
+        return;
+      }
+      if (!canvas.getContext) return;
+      const ctx = canvas.getContext('2d');
+      charts.agentUsage = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: rows.map(item => item.agent_id || '默认助手'),
+          datasets: [{
+            label: '问答数',
+            data: rows.map(item => item.chats),
+            backgroundColor: [
+              'rgba(37, 99, 235, 0.86)',
+              'rgba(16, 185, 129, 0.86)',
+              'rgba(245, 158, 11, 0.86)',
+              'rgba(139, 92, 246, 0.86)',
+              'rgba(236, 72, 153, 0.86)',
+              'rgba(6, 182, 212, 0.86)'
+            ],
+            borderRadius: 10
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis: 'y',
+          plugins: { legend: { display: false } },
+          scales: { x: { beginAtZero: true } }
+        }
+      });
+    }
+
+    function renderSimpleList(targetId, rows, mapper, emptyText) {
+      const el = document.getElementById(targetId);
+      if (!rows.length) {
+        el.innerHTML = `<div class="empty">${emptyText}</div>`;
+        return;
+      }
+      el.innerHTML = rows.map((row, index) => mapper(row, index)).join('');
+    }
+
+    function renderActiveUsers(rows) {
+      renderSimpleList('activeUsersList', rows, (row, index) => `
+        <div class="list-item">
+          <div class="rank">${index + 1}</div>
+          <div>
+            <div class="item-title">${maskPhone(row.phone)}</div>
+            <div class="item-meta">最近 ${currentDays} 天</div>
+          </div>
+          <div class="item-value">${formatNumber(row.chats)} 次</div>
+        </div>
+      `, '暂无活跃用户数据。');
+    }
+
+    function renderTopQuestions(rows) {
+      renderSimpleList('topQuestionsList', rows, (row, index) => `
+        <div class="list-item">
+          <div class="rank">${index + 1}</div>
+          <div>
+            <div class="item-title">${row.question || '未记录问题'}</div>
+            <div class="item-meta">重复提问次数</div>
+          </div>
+          <div class="item-value">${formatNumber(row.count)}</div>
+        </div>
+      `, '暂无热门问题数据。');
+    }
+
+    function renderSummaryInsights(summary) {
+      const rows = [
+        { title: '接口成功率', meta: '基于请求日志计算', value: `${Math.max(0, 100 - Number(summary.error_rate || 0)).toFixed(2)}%` },
+        { title: '知识库命中问答', meta: '命中知识片段的会话占比', value: `${summary.knowledge_hit_rate || 0}%` },
+        { title: '平均响应时间', meta: '请求日志平均值', value: `${formatNumber(summary.avg_response_time)}ms` },
+        { title: '总请求 / 问答', meta: '可用于判断系统调用密度', value: `${formatNumber(summary.total_requests)} / ${formatNumber(summary.total_chats)}` },
+      ];
+      renderSimpleList('summaryInsights', rows, (row, index) => `
+        <div class="list-item">
+          <div class="rank">${index + 1}</div>
+          <div>
+            <div class="item-title">${row.title}</div>
+            <div class="item-meta">${row.meta}</div>
+          </div>
+          <div class="item-value">${row.value}</div>
+        </div>
+      `, '暂无摘要数据。');
+    }
+
+    async function loadAnalytics(days = 7) {
+      currentDays = days;
+      setActiveDays(days);
+      try {
+        const [summary, trends, agentUsage, topQuestions, activeUsers, hourly] = await Promise.all([
+          tenantFetch(`/api/tenant/analytics/summary?days=${days}`),
+          tenantFetch(`/api/tenant/analytics/daily-trends?days=${days}`),
+          tenantFetch(`/api/tenant/analytics/agent-usage?days=${days}&limit=8`),
+          tenantFetch(`/api/tenant/analytics/top-questions?days=${days}&limit=10`),
+          tenantFetch(`/api/tenant/analytics/active-users?days=${days}&limit=10`),
+          tenantFetch(`/api/tenant/analytics/hourly-distribution?days=${days}`)
+        ]);
+        renderKPIs(summary.data || {});
+        renderDailyTrends(trends.data || []);
+        renderHourlyDist(hourly.data || []);
+        renderAgentUsage(agentUsage.data || []);
+        renderActiveUsers(activeUsers.data || []);
+        renderTopQuestions(topQuestions.data || []);
+        renderSummaryInsights(summary.data || {});
+      } catch (error) {
+        document.getElementById('kpi-cards').innerHTML = `<div class="empty">${String(error.message || error)}</div>`;
+        ['activeUsersList', 'topQuestionsList', 'summaryInsights'].forEach((id) => {
+          document.getElementById(id).innerHTML = '<div class="empty">数据加载失败</div>';
+        });
+      }
+    }
+
+    (async function init() {
+      await loadTenantTheme();
+      await loadAnalytics(7);
+    })();
+  </script>
+</body>
+</html>

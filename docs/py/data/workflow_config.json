@@ -1,0 +1,27 @@
+{
+  "default_workflow_id": "main",
+  "items": [
+    {
+      "workflow_id": "main",
+      "name": "默认工作流",
+      "description": "当前租户主流程。",
+      "enabled": true,
+      "sort_order": 100,
+      "version": "V1.0",
+      "status": "draft",
+      "updated_at": "",
+      "nodes": [],
+      "connections": [],
+      "app_overrides": {
+        "chat_title": "",
+        "chat_tagline": "",
+        "welcome_message": "",
+        "agent_description": "",
+        "recommended_questions": [],
+        "input_placeholder": "",
+        "send_button_text": ""
+      },
+      "system_prompt": "你是企业知识库的租户专属智能助理。\n\n请优先根据下方知识库内容回答；如果知识库没有明确答案，先说明知识不足，再给出谨慎建议。\n\n【知识库内容开始】\n{knowledge_context}\n【知识库内容结束】\n"
+    }
+  ]
+}

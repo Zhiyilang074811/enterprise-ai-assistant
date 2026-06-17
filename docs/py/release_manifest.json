@@ -1,0 +1,25 @@
+{
+  "profile_key": "service_provider",
+  "label": "服务商版",
+  "deployment_mode": "double_backend",
+  "exported_at": "2026-04-24 17:38:12",
+  "frontend_files": [
+    "login_v2.html",
+    "admin_v2.html",
+    "tenant_v2.html",
+    "index_v2.html",
+    "analytics_v2.html",
+    "platform_analytics_v2.html"
+  ],
+  "docs": [
+    "README.md",
+    "docs/README.md",
+    "docs/00_版本与交付说明.md",
+    "docs/01_功能介绍.md",
+    "docs/02_部署与启动.md",
+    "docs/03_使用教程.md",
+    "docs/04_二开与接口说明.md",
+    "docs/05_运维排障.md",
+    "docs/06_检索与向量库说明.md"
+  ]
+}

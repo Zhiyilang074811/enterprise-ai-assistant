@@ -1,0 +1,80 @@
+{
+  "edition": "service_provider",
+  "deployment_mode": "double_backend",
+  "feature_flags": {
+    "platform_admin": true,
+    "tenant_admin": true,
+    "platform_logs": true,
+    "multi_tenant_manage": true,
+    "factory_center": false,
+    "release_export": false
+  },
+  "release_profile": {
+    "key": "service_provider",
+    "label": "服务商版",
+    "summary": "双后台版本，适合服务商、多客户托管和 SaaS 运营。",
+    "entries": {
+      "platform": "/admin",
+      "tenant": "/tenant",
+      "login": "/login",
+      "chat": "/chat"
+    },
+    "docs_profile": "service_provider"
+  },
+  "app_id": "default",
+  "app_name": "",
+  "app_subtitle": "",
+  "chat_title": "",
+  "chat_tagline": "",
+  "welcome_message": "",
+  "agent_description": "",
+  "logo": "",
+  "recommended_questions": [],
+  "short_term_memory": {
+    "enabled": true,
+    "max_turns": 6,
+    "max_chars": 2400
+  },
+  "login_hint": "",
+  "input_placeholder": "",
+  "send_button_text": "",
+  "streaming": true,
+  "fallback_enabled": true,
+  "fallback_message": "针对您这个问题，我暂时还无法进行回答，请换一个问题吧。",
+  "show_recommended": true,
+  "record_chat_logs": true,
+  "factory_enabled": false,
+  "knowledge_namespace": "default",
+  "knowledge_tiers": {
+    "hotfix": {
+      "label": "L3 热库",
+      "weight": 3.0,
+      "desc": "高时效、随时变化的知识"
+    },
+    "seasonal": {
+      "label": "L2 增量库",
+      "weight": 2.0,
+      "desc": "阶段性更新、偶尔变更的知识"
+    },
+    "permanent": {
+      "label": "L1 基础库",
+      "weight": 1.0,
+      "desc": "长期稳定、基本不变的知识"
+    }
+  },
+  "theme": {
+    "bg": "#f6f1df",
+    "bg_soft": "#fffaf0",
+    "surface": "rgba(255, 252, 244, 0.9)",
+    "surface_strong": "#fffef8",
+    "line": "#eadbb8",
+    "text": "#4c3e2c",
+    "muted": "#866f59",
+    "accent": "#13b6ad",
+    "accent_strong": "#0f9692",
+    "accent_soft": "rgba(19, 182, 173, 0.14)",
+    "warm": "#f3c067",
+    "warm_soft": "rgba(243, 192, 103, 0.2)",
+    "danger": "#d06b5a"
+  }
+}

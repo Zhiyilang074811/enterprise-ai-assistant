@@ -1,0 +1,22 @@
+{
+  "weather": {
+    "enabled": false,
+    "provider": "wttr",
+    "endpoint": "https://wttr.in/{city}?format=j1",
+    "api_key": "",
+    "timeout_seconds": 8,
+    "default_city": "上海"
+  },
+  "email": {
+    "enabled": false,
+    "smtp_host": "",
+    "smtp_port": 465,
+    "username": "",
+    "password": "",
+    "from_email": "",
+    "from_name": "企业知识助手",
+    "use_tls": false,
+    "use_ssl": true,
+    "allow_domains": []
+  }
+}
