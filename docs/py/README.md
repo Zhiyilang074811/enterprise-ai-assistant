@@ -1,33 +1,41 @@
-# 服务商版
+﻿# Enterprise AI Assistant Platform — Python Backend
 
-这是根据当前母版源码自动裁剪出来的 服务商版 交付包。
+FastAPI-based multi-tenant AI assistant with RAG pipeline, LangChain/LangGraph agents, and HarmonyOS app support.
 
-## 版本定位
+## Directory Structure
 
-- 版本名称：服务商版
-- 部署模式：`double_backend`
-- 适用对象：服务商、多客户托管方、SaaS 运营方
-- 版本简介：双后台版本，适合服务商、多客户托管和 SaaS 运营。
+`
+docs/py/
+├── backend/          # FastAPI application (main.py, RAG, agents, etc.)
+├── frontend/         # HTML5 admin/tenant/analytics portals
+├── data/             # Configuration, knowledge, vector DB templates
+├── knowledge/        # Markdown-based knowledge base
+├── scripts/          # Utility scripts
+├── config/           # API keys and security configs
+├── requirements.txt  # Python dependencies
+├── start.sh          # One-command launcher
+└── generate_keys.py  # Security key generator
+`
 
-## 默认入口
+## Quick Start
 
-- 平台后台：`/admin`
-- 租户后台：`/tenant`
-- 登录入口：`/login`
-- 聊天入口：`/chat`
+`ash
+cd docs/py
+pip install -r requirements.txt
+python -m uvicorn backend.main:app --host 0.0.0.0 --port 6090
+`
 
-## 交付重点
+## Key Modules
 
-- 平台后台 + 租户后台双后台交付
-- 支持多企业客户统一管理与分租户配置
-- 统一运营、多智能体装配、工作流交付与客户隔离并存
-
-## 你先看哪些文档
-
-- `docs/00_版本与交付说明.md`：先看版本差异、默认入口、交付边界
-- `docs/01_功能介绍.md`：给客户讲产品、给交付讲能力、给技术讲结构
-- `docs/02_部署与启动.md`：部署方式、本地启动、初始化顺序
-- `docs/03_使用教程.md`：后台怎么用、客户怎么配置、常见操作顺序
-- `docs/04_二开与接口说明.md`：代码入口、接口分组、配置文件、再次发版
-- `docs/05_运维排障.md`：日志、数据库、知识库、常见故障处理
-- `docs/06_检索与向量库说明.md`：Hybrid / Dense / BM25、Qdrant / Milvus 配置说明
+| Module | File | Purpose |
+|--------|------|---------|
+| Main App | ackend/main.py | FastAPI application with 40+ endpoints |
+| RAG Engine | ackend/rag.py | Retrieval-Augmented Generation pipeline |
+| Tenant Config | ackend/tenant_config.py | Multi-tenant isolation and config |
+| LLM Service | ackend/llm_service.py | Multi-LLM pluggable backend |
+| Guardrails | ackend/guardrails.py | Input/output content safety |
+| Workflow | ackend/workflow_runtime.py | LangGraph agent orchestration |
+| Retrieval | ackend/retrievers.py | BM25 + TF-IDF + Dense hybrid search |
+| Knowledge | ackend/knowledge_assets.py | Knowledge base management |
+| Database | ackend/database.py | SQLite/PostgreSQL ORM layer |
+| Security | ackend/security_config.py | JWT auth and RBAC |

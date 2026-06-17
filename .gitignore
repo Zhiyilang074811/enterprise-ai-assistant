@@ -1,6 +1,7 @@
 ﻿# Python
 __pycache__/
 *.py[cod]
+*.class
 *.so
 .Python
 build/
@@ -21,10 +22,17 @@ ENV/
 *.swp
 *.swo
 *~
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
 # OS
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+.BIN/
 
 # Environment
 .env
@@ -34,14 +42,17 @@ Thumbs.db
 # Logs
 *.log
 logs/
+*.log.*
 
 # Keys
 *_key.pem
 *.pem
+api_keys.txt
 
 # Distribution
 *.tar.gz
 *.zip
+*.whl
 
 # HarmonyOS
 harmony_app/.idea/
@@ -49,11 +60,18 @@ harmony_app/build/
 harmony_app/.hvigor/
 *.hap
 *.app
+*.cc
 
 # Database
 *.db
 *.sqlite3
+*.sqlite
 
-# Temp
+# Temporary
 tmp/
 temp/
+.upload_tmp/
+
+# Documentation
+DOCS_INDEX.md
+HOMEPAGE.md

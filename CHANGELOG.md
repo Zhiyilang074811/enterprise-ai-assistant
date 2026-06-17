@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Planned
+- Full-text search across knowledge base
+- Knowledge graph visualization
+- Multi-user collaboration
+- Plugin system for custom tools
+- Webhook integration
+- Kubernetes deployment support
+
 ## [1.0.0] - 2026-06-17
 
 ### Added
@@ -19,3 +32,10 @@ All notable changes to this project will be documented in this file.
 - Semantic cache with similarity detection
 - Balance management and rate limiting
 - Evaluation framework for retrieval quality
+- Phone-based account system with device binding
+- Knowledge tag system and categories
+- Generic web crawler for knowledge ingestion
+- 40+ REST API endpoints
+- SSE streaming chat responses
+- Admin console (Admin V2) and Tenant portal (Tenant V2)
+- Complete documentation suite (7 Chinese docs + English README)
