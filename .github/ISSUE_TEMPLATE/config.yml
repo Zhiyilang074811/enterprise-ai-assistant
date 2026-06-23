@@ -1,0 +1,8 @@
+﻿blank_issues_enabled: false
+contact_links:
+  - name: Question/Support
+    url: https://github.com/Zhiyilang074811/enterprise-ai-assistant/discussions
+    about: Please ask and answer questions in GitHub Discussions
+  - name: HarmonyOS App Support
+    url: https://developer.huawei.com/consumer/cn/forum/
+    about: For HarmonyOS app related questions

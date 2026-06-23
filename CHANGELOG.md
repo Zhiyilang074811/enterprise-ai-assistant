@@ -8,15 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- GitHub Issue Templates (Bug Report, Feature Request)
-- Pull Request Template
-- CODEOWNERS file
-- FUNDING.yml for sponsorships
+- ASCII art banner in README.md
+- Comprehensive screenshots guide
+- GitHub Pull Request Template
+- GitHub Issue Template configuration
 - .gitattributes for consistent line endings
-- Screenshots guide
-- Huawei AppGallery upload guide
-- InfoQ 征文完整稿件
-- Upload checklist for HarmonyOS app store
 
 ## [1.0.0] - 2026-06-17
 
@@ -43,3 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Admin console (Admin V2) and Tenant portal (Tenant V2)
 - Complete documentation suite (7 Chinese docs + English README)
 - TailwindCSS modern UI with dark mode support
+- Huawei AppGallery upload guide
+- InfoQ 征文完整稿件
+- Upload checklist for HarmonyOS app
+- Media kit and publishing channels
