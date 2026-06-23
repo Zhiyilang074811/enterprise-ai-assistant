@@ -1,6 +1,4 @@
-﻿
-
-# Enterprise Multi-Tenant AI Assistant Platform
+﻿# Enterprise Multi-Tenant AI Assistant Platform
 
 > **面向服务商、SaaS 运营方、集团型企业**的一站式多租户智能问答与流程助手平台
 > 基于 RAG 检索增强生成 + LangChain/LangGraph 智能体架构，支撑多客户托管、统一交付和可持续运营的企业级 AI 解决方案
@@ -93,27 +91,53 @@
 
 ## Screenshots
 
-> 平台提供精美的 Tailwind CSS 现代化 UI，采用绿色主题设计，支持暗色模式。
+> 以下为**真实运行截图**，基于 TailwindCSS 现代化 UI 设计，支持暗色模式。
+
+### Hero Banner
+
+![Hero Banner](screenshots/hero_banner.png)
 
 ### Login Page
 
-现代化的登录界面，支持手机号绑定和设备管理。
+现代化登录界面，支持手机号绑定和设备管理。
+
+![Login Page](screenshots/01_login_page.png)
+
+### Index / Chat Page
+
+主对话页面，流式响应体验。
+
+![Index Page](screenshots/02_index_page.png)
 
 ### Admin Console
 
 全功能平台管理后台，支持租户管理、知识库管理、数据分析、爬虫配置等。
 
+![Admin Console](screenshots/03_admin_page.png)
+
 ### Tenant Portal
 
-租户自助管理界面，支持智能体配置、知识库管理、工作流编排、数据分析。
+租户自助管理界面，支持智能体配置、知识库管理、工作流编排。
 
-### HarmonyOS App
+![Tenant Portal](screenshots/04_tenant_page.png)
 
-鸿蒙原生移动应用，支持流式对话、语音交互、跨设备协同。
+### Analytics Dashboard
+
+实时数据分析面板，展示使用指标和性能趋势。
+
+![Analytics Dashboard](screenshots/05_analytics_page.png)
+
+### Platform Analytics
+
+跨租户数据分析，平台级运营监控。
+
+![Platform Analytics](screenshots/06_platform_analytics.png)
 
 ---
 
 ## Architecture
+
+![Architecture Diagram](screenshots/architecture_diagram.png)
 
 `
 ┌──────────────────────────────────────────────────────────────────┐
@@ -416,4 +440,3 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 Made with ❤️ by [Zhiyilang074811](https://github.com/Zhiyilang074811)
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-2.svg)](https://buymeacoffee.com/Zhiyilang074811)
-
