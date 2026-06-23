@@ -7,13 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned
-- Full-text search across knowledge base
-- Knowledge graph visualization
-- Multi-user collaboration
-- Plugin system for custom tools
-- Webhook integration
-- Kubernetes deployment support
+### Added
+- GitHub Issue Templates (Bug Report, Feature Request)
+- Pull Request Template
+- CODEOWNERS file
+- FUNDING.yml for sponsorships
+- .gitattributes for consistent line endings
+- Screenshots guide
+- Huawei AppGallery upload guide
+- InfoQ 征文完整稿件
+- Upload checklist for HarmonyOS app store
 
 ## [1.0.0] - 2026-06-17
 
@@ -35,7 +38,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Phone-based account system with device binding
 - Knowledge tag system and categories
 - Generic web crawler for knowledge ingestion
-- 40+ REST API endpoints
+- 158+ REST API endpoints
 - SSE streaming chat responses
 - Admin console (Admin V2) and Tenant portal (Tenant V2)
 - Complete documentation suite (7 Chinese docs + English README)
+- TailwindCSS modern UI with dark mode support

@@ -1,0 +1,18 @@
+﻿# Code Owners
+# This file defines individuals responsible for code in this repository.
+
+# Core backend
+/docs/py/backend/ @Zhiyilang074811
+
+# Frontend
+/docs/py/frontend/ @Zhiyilang074811
+
+# HarmonyOS App
+/harmony_app/ @Zhiyilang074811
+
+# Documentation
+/docs/ @Zhiyilang074811
+*.md @Zhiyilang074811
+
+# Root level
+/* @Zhiyilang074811

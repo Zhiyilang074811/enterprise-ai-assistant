@@ -44,10 +44,12 @@ Desktop.ini
 logs/
 *.log.*
 
-# Keys
+# Keys and Secrets
 *_key.pem
 *.pem
-api_keys.txt
+config/api_keys.txt
+tenants/*/api_keys.txt
+*.keystore
 
 # Distribution
 *.tar.gz
@@ -72,6 +74,7 @@ tmp/
 temp/
 .upload_tmp/
 
-# Documentation
+# Generated docs
 DOCS_INDEX.md
 HOMEPAGE.md
+HOME.md

@@ -1,0 +1,40 @@
+﻿# Auto detect text files and perform LF normalization
+* text=auto
+
+# The above is the default. Set explicit attributes for known file types.
+
+# Documents
+*.md text diff=markdown
+*.txt text
+
+# Code
+*.py text eol=lf
+*.js text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# HarmonyOS
+*.ets text eol=lf
+*.json5 text eol=lf
+
+# Executables
+*.sh text eol=lf
+*.bat binary
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.ttf binary
+*.woff2 binary
+*.jar binary
+*.zip binary
+*.tar.gz binary
+*.whl binary

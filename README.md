@@ -9,8 +9,9 @@
 [![LangChain](https://img.shields.io/badge/LangChain-0.3-orange.svg)](https://langchain.com/)
 [![HarmonyOS](https://img.shields.io/badge/HarmonyOS--NEXT-Red.svg)](https://developer.harmonyos.com/)
 [![RAG](https://img.shields.io/badge/RAG-Enhanced-purple.svg)]()
-[![Stars](https://img.shields.io/github/stars/Zhiyilang074811/enterprise-ai-assistant?style=social)](https://github.com/Zhiyilang074811/enterprise-ai-assistant/stargazers)
-[![Forks](https://img.shields.io/github/forks/Zhiyilang074811/enterprise-ai-assistant?style=social)](https://github.com/Zhiyilang074811/enterprise-ai-assistant/network/members)
+[![GitHub stars](https://img.shields.io/github/stars/Zhiyilang074811/enterprise-ai-assistant?style=social)](https://github.com/Zhiyilang074811/enterprise-ai-assistant/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/Zhiyilang074811/enterprise-ai-assistant?style=social)](https://github.com/Zhiyilang074811/enterprise-ai-assistant/network/members)
+[![GitHub issues](https://img.shields.io/github/issues/Zhiyilang074811/enterprise-ai-assistant)](https://github.com/Zhiyilang074811/enterprise-ai-assistant/issues)
 
 ---
 
@@ -90,7 +91,23 @@
 
 ## Screenshots
 
-> 平台管理后台、租户门户、鸿蒙 App 等多端界面，支持 Web 和 HarmonyOS 原生体验。
+> 平台提供精美的 Tailwind CSS 现代化 UI，采用绿色主题设计，支持暗色模式。
+
+### Login Page
+
+现代化的登录界面，支持手机号绑定和设备管理。
+
+### Admin Console
+
+全功能平台管理后台，支持租户管理、知识库管理、数据分析、爬虫配置等。
+
+### Tenant Portal
+
+租户自助管理界面，支持智能体配置、知识库管理、工作流编排、数据分析。
+
+### HarmonyOS App
+
+鸿蒙原生移动应用，支持流式对话、语音交互、跨设备协同。
 
 ---
 
@@ -167,10 +184,10 @@
 
 | Component | Tech | Purpose |
 |-----------|------|---------|
-| Login Portal | HTML5 / JS | User login & tenant selection |
-| Admin Console | HTML5 / JS | Platform admin dashboard |
-| Tenant Portal | HTML5 / JS | Tenant self-service management |
-| Analytics | HTML5 / JS | Real-time metrics dashboards |
+| Login Portal | HTML5 / JS / TailwindCSS | User login & tenant selection |
+| Admin Console | HTML5 / JS / TailwindCSS | Platform admin dashboard |
+| Tenant Portal | HTML5 / JS / TailwindCSS | Tenant self-service management |
+| Analytics | HTML5 / JS / TailwindCSS | Real-time metrics dashboards |
 
 ### HarmonyOS Mobile App
 
@@ -234,8 +251,8 @@ python -m uvicorn backend.main:app --host 0.0.0.0 --port 6090
 
 | Role | Username | Password |
 |------|----------|----------|
-| Platform Admin | platform_admin | Platform@2026 |
-| Tenant Admin | 	enant_admin | Tenant@2026 |
+| Platform Admin | \platform_admin\ | \Platform@2026\ |
+| Tenant Admin | \	enant_admin\ | \Tenant@2026\ |
 
 > **Security**: Change default passwords after first login.
 
@@ -243,64 +260,98 @@ python -m uvicorn backend.main:app --host 0.0.0.0 --port 6090
 
 ## API Reference
 
-The platform exposes a comprehensive REST API with 40+ endpoints:
+The platform exposes a comprehensive REST API with **158+ endpoints**:
 
 ### Authentication & Accounts
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | /api/auth | Phone number login |
-| POST | /api/password/change | Change password |
-| GET | /api/balance | Query user balance |
+| POST | \/api/auth\ | Phone number login |
+| POST | \/api/password/change\ | Change password |
+| GET | \/api/balance\ | Query user balance |
 
 ### Chat & AI
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | /api/public/app-config | Get public app configuration |
-| GET | /api/public/tenant-app-config | Get tenant-specific config |
-| POST | /api/public/chat | Stream chat (SSE response) |
-| POST | /consoleapi/v1/chat | Console chat API |
-| GET | /consoleapi/v1/conversations | List conversations |
-| GET | /consoleapi/v1/conversations/{id}/messages | Get conversation messages |
+| GET | \/api/public/app-config\ | Get public app configuration |
+| GET | \/api/public/tenant-app-config\ | Get tenant-specific config |
+| POST | \/api/public/chat\ | Stream chat (SSE response) |
+| POST | \/consoleapi/v1/chat\ | Console chat API |
+| GET | \/consoleapi/v1/conversations\ | List conversations |
+| GET | \/consoleapi/v1/conversations/{id}/messages\ | Get conversation messages |
 
-### Admin
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | /api/admin/login | Admin login |
-| GET | /api/admin/accounts | List accounts |
-| GET | /api/admin/chat-logs | Chat log audit |
-| GET | /api/admin/observability/summary | Observability summary |
-| GET | /api/admin/evaluations | Evaluation runs |
-| POST | /api/admin/evaluations/run | Run evaluation |
-| GET | /api/admin/observability/requests | Request logs |
-| GET | /api/admin/guardrail-events | Guardrail events |
-| GET | /api/admin/tenants | List tenants |
-| POST | /api/admin/tenants | Create tenant |
-| PUT | /api/admin/tenants | Update tenant |
-| POST | /api/admin/knowledge/upload | Upload knowledge file |
-| GET | /api/admin/knowledge/stats | Knowledge stats |
-| GET | /api/admin/app-config | App config |
-| PUT | /api/admin/app-config | Update app config |
-
-### Tenant
+### Admin APIs
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | /api/tenant/auth | Tenant authentication |
-| POST | /api/tenant/chat | Tenant chat |
+| POST | \/api/admin/login\ | Admin login |
+| GET | \/api/admin/accounts\ | List accounts |
+| GET | \/api/admin/chat-logs\ | Chat log audit |
+| GET | \/api/admin/observability/summary\ | Observability summary |
+| GET | \/api/admin/evaluations\ | Evaluation runs |
+| POST | \/api/admin/evaluations/run\ | Run evaluation |
+| GET | \/api/admin/observability/requests\ | Request logs |
+| GET | \/api/admin/guardrail-events\ | Guardrail events |
+| GET | \/api/admin/tenants\ | List tenants |
+| POST | \/api/admin/tenants\ | Create tenant |
+| PUT | \/api/admin/tenants\ | Update tenant |
+| POST | \/api/admin/knowledge/upload\ | Upload knowledge file |
+| GET | \/api/admin/knowledge/stats\ | Knowledge stats |
+| GET | \/api/admin/app-config\ | App config |
+| PUT | \/api/admin/app-config\ | Update app config |
+| GET | \/api/admin/model-config\ | Model config |
+| PUT | \/api/admin/model-config\ | Update model config |
+| GET | \/api/admin/crawler-config\ | Crawler config |
+| POST | \/api/admin/crawler-config/run\ | Run crawler |
+| GET | \/api/admin/crawler-runs\ | Crawler run history |
+| GET | \/api/admin/crawler-scheduler\ | Crawler scheduler |
+| POST | \/api/admin/knowledge/rebuild\ | Rebuild knowledge index |
+| GET | \/api/admin/release-profiles\ | Release profiles |
+| POST | \/api/admin/release/export\ | Export release bundle |
+
+### Tenant APIs
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | \/api/tenant/auth\ | Tenant authentication |
+| POST | \/api/tenant/chat\ | Tenant chat |
+| GET | \/api/tenant/app-config\ | Tenant app config |
+| PUT | \/api/tenant/app-config\ | Update tenant config |
+| GET | \/api/tenant/system-prompt\ | System prompt |
+| PUT | \/api/tenant/system-prompt\ | Update system prompt |
+| GET | \/api/tenant/knowledge/overview\ | Knowledge overview |
+| POST | \/api/tenant/knowledge/upload\ | Upload knowledge file |
+| POST | \/api/tenant/knowledge/upload-web\ | Web crawl ingest |
+| GET | \/api/tenant/knowledge/files\ | List knowledge files |
+| DELETE | \/api/tenant/knowledge/file\ | Delete knowledge file |
+| GET | \/api/tenant/agents\ | List agents |
+| POST | \/api/tenant/agents\ | Create agent |
+| DELETE | \/api/tenant/agents/{id}\ | Delete agent |
+| GET | \/api/tenant/users\ | List users |
+| POST | \/api/tenant/users\ | Create user |
+| GET | \/api/tenant/workflows\ | List workflows |
+| POST | \/api/tenant/workflows/publish\ | Publish workflow |
+| POST | \/api/tenant/workflows/run\ | Run workflow |
+| GET | \/api/tenant/analytics/summary\ | Analytics summary |
+| GET | \/api/tenant/analytics/daily-trends\ | Daily trends |
+| GET | \/api/tenant/analytics/top-questions\ | Top questions |
+| GET | \/api/tenant/analytics/active-users\ | Active users |
+| GET | \/api/tenant/analytics/hourly-distribution\ | Hourly distribution |
+| GET | \/api/tenant/chat-logs\ | Chat logs |
+| GET | \/api/tenant/request-logs\ | Request logs |
+| GET | \/api/tenant/guardrail-events\ | Guardrail events |
 
 ### HarmonyOS App APIs
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | /api/chat | Chat with streaming |
-| POST | /api/chat/sessions/list | List sessions |
-| POST | /api/chat/sessions/create | Create session |
-| POST | /api/chat/sessions/messages | Get session messages |
-| POST | /api/chat/agents | Manage agents |
-| GET | /api/queue/status | Queue status |
+| POST | \/api/chat\ | Chat with streaming |
+| POST | \/api/chat/sessions/list\ | List sessions |
+| POST | \/api/chat/sessions/create\ | Create session |
+| POST | \/api/chat/sessions/messages\ | Get session messages |
+| POST | \/api/chat/agents\ | Manage agents |
+| GET | \/api/queue/status\ | Queue status |
 
 > Full API documentation: [二开与接口说明](docs/04_二开与接口说明.md)
 
