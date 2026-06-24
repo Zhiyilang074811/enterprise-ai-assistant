@@ -125,13 +125,12 @@
 
 实时数据分析面板，展示使用指标和性能趋势。
 
-![Analytics Dashboard](screenshots/05_analytics_page.png)
+
 
 ### Platform Analytics
 
 跨租户数据分析，平台级运营监控。
 
-![Platform Analytics](screenshots/06_platform_analytics.png)
 
 ---
 
